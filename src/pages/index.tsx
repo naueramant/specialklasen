@@ -5,25 +5,25 @@ import { BodyText, ImpactText } from "../components/Text";
 const IndexPage: FunctionComponent = () => {
   return (
     <>
-      <ImpactText>What the hell is this?</ImpactText>
+      <ImpactText>Hvad fanden er det her?</ImpactText>
 
       <BodyText>
-        Specialklasen TM was founded in 2023 with the mission to celebrate to
-        meetup, drink wine and talk about how poor the world is. We believe that
-        being different is what makes us special, and we are dedicated to
-        showcasing the most extraordinary individuals and events that defy
-        conventional norms.
+        Specialklasen TM blev grundlagt i 2023 med missionen at fejre møder,
+        drikke vin og tale om hvor fattig verden er. Vi tror på, at det at være
+        anderledes er det, der gør os specielle, og vi er dedikerede til at
+        fremvise de mest ekstraordinære individer og begivenheder, der udfordrer
+        konventionelle normer.
       </BodyText>
 
       <br />
 
-      <ImpactText>Meet the members</ImpactText>
+      <ImpactText>Mød medlemmerne</ImpactText>
 
       <BodyText>
-        We consists of a variety of unique individuals, each bringing their own
-        special talents and perspectives to the group. From journalists,
-        musicians, innovators, and thinkers. Most of them are just here for the
-        wine.
+        Vi består af en række unikke individer, der hver bringer deres egne
+        specielle talenter og perspektiver til gruppen. Fra journalister,
+        musikere, innovatører og tænkere. De fleste af dem er bare her for
+        vinen.
       </BodyText>
 
       <div

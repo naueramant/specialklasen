@@ -19,8 +19,8 @@ const CellarPage: FunctionComponent = () => {
   return (
     <>
       <BodyText>
-        We currently have {remainingWines} wines in our cellar and {drunkWines}{" "}
-        wines have been consumed 🎉
+        Vi har i øjeblikket {remainingWines} vine i vores kælder og {drunkWines}{" "}
+        vine er blevet konsumeret 🎉
       </BodyText>
 
       <WineTable wines={wines} />

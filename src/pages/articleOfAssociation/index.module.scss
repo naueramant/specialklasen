@@ -1,0 +1,150 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.content {
+  line-height: 1.6;
+}
+
+.section {
+  margin-bottom: 2.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sectionTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.subsection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.subsectionTitle {
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+  font-size: 1.1rem;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.agenda {
+  margin: 1rem 0;
+  padding-left: 2rem;
+  
+  li {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-primary);
+}
+
+.adoption {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-style: italic;
+}
+
+.signature {
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.signatureLine {
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.signatureLabel {
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+  color: var(--color-text);
+}
+
+.signatureName {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--color-primary);
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
+  
+  .subsection {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .subsectionTitle {
+    min-width: auto;
+  }
+  
+  .agenda {
+    padding-left: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    margin-bottom: 2rem;
+  }
+  
+  .section {
+    margin-bottom: 2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+  
+  .footer {
+    margin-top: 3rem;
+  }
+}

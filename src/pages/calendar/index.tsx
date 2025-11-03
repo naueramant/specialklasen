@@ -13,39 +13,39 @@ interface Event {
 // Sample events data - you can replace this with your actual data source
 const events: Event[] = [
   {
-    title: "Arbor Day Celebration",
+    title: "Træplantningsdag",
     description:
-      "The City of Brookhaven celebrates Arbor Day by planting trees in Georgian Hills Park, located at 2800 East Georgian Drive, on Saturday, March 12, from 10 a.m. to noon.",
+      "Byen Brookhaven fejrer Træplantningsdag ved at plante træer i Georgian Hills Park, beliggende på 2800 East Georgian Drive, lørdag den 12. marts fra kl. 10 til 12.",
     location: "Georgian Hills Park, Brookhaven, GA",
-    date: new Date(2024, 2, 12), // March 12, 2024
+    date: new Date(2024, 2, 12), // 12. marts 2024
   },
   {
-    title: "Cherry Blossom Festival",
+    title: "Kirsebærblomsterfestival",
     description:
-      "This 3-day celebration of Brookhaven, GA and its blooms include musical performances, an arts and crafts market, children's village, 5K run/walk, 1K walk and pet parade.",
+      "Denne 3-dages fejring af Brookhaven, GA og dens blomster inkluderer musikopførelser, et kunsthåndværksmarked, børneby, 5K løb/gå, 1K gå og kæledyrsparade.",
     location: "Downtown Brookhaven, GA",
-    date: new Date(2024, 3, 2), // April 2, 2024
+    date: new Date(2024, 3, 2), // 2. april 2024
   },
   {
-    title: "Brookhaven Beer Festival",
+    title: "Brookhaven Ølfestival",
     description:
-      "Over 100 import & craft beers plus a great selection of breweries along with great entertainment.",
+      "Over 100 import- og håndværksøl samt et fantastisk udvalg af bryggerier sammen med god underholdning.",
     location: "Brookhaven Park",
-    date: new Date(2024, 5, 11), // June 11, 2024
+    date: new Date(2024, 5, 11), // 11. juni 2024
   },
   {
-    title: "Summer Wine Tasting",
+    title: "Sommer Vinsmagning",
     description:
-      "Join us for an exclusive wine tasting event featuring selections from our private cellar. Perfect for wine enthusiasts and newcomers alike.",
+      "Deltag i vores eksklusive vinsmagningsbegivenhed med udvalg fra vores private kælder. Perfekt for vinentusiaster og nybegyndere.",
     location: "Special Klasen Venue",
-    date: new Date(2025, 6, 15), // July 15, 2025
+    date: new Date(2025, 6, 15), // 15. juli 2025
   },
   {
-    title: "Annual Harvest Celebration",
+    title: "Årlig Høstfest",
     description:
-      "Celebrate the autumn harvest with us. Featuring seasonal wines, live music, and gourmet food pairings in a beautiful outdoor setting.",
+      "Fejr efterårets høst med os. Med sæsonvine, livemusik og gourmetmad i smukke udendørs omgivelser.",
     location: "Special Klasen Gardens",
-    date: new Date(2025, 11, 12), // December 12, 2025
+    date: new Date(2025, 11, 12), // 12. december 2025
   },
 ];
 
