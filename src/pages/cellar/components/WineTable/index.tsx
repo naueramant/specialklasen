@@ -83,6 +83,43 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
           className={styles.searchInput}
         />
       </div>
+
+      {/* Mobile Sort Controls */}
+      <div className={styles.mobileSortContainer}>
+        <select
+          value={`${sortField}-${sortDirection}`}
+          onChange={(e) => {
+            const [field, direction] = e.target.value.split("-") as [
+              SortField,
+              SortDirection
+            ];
+            setSortField(field);
+            setSortDirection(direction);
+          }}
+          className={styles.mobileSortSelect}
+        >
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="year-desc">Year (Newest)</option>
+          <option value="year-asc">Year (Oldest)</option>
+          <option value="country-asc">Country (A-Z)</option>
+          <option value="country-desc">Country (Z-A)</option>
+          <option value="region-asc">Region (A-Z)</option>
+          <option value="region-desc">Region (Z-A)</option>
+          <option value="grape-asc">Grape (A-Z)</option>
+          <option value="grape-desc">Grape (Z-A)</option>
+          <option value="kind-asc">Kind (A-Z)</option>
+          <option value="kind-desc">Kind (Z-A)</option>
+          <option value="boughtAt-desc">Bought (Newest)</option>
+          <option value="boughtAt-asc">Bought (Oldest)</option>
+          <option value="quantity-desc">Quantity (Most)</option>
+          <option value="quantity-asc">Quantity (Least)</option>
+          <option value="quantityLeft-desc">Remaining (Most)</option>
+          <option value="quantityLeft-asc">Remaining (Least)</option>
+        </select>
+      </div>
+
+      {/* Desktop Table */}
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
@@ -179,6 +216,88 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
             ))}
           </tbody>
         </table>
+        {filteredAndSortedWines.length === 0 && searchTerm && (
+          <div className={styles.emptyState}>
+            <p>No wines found matching "{searchTerm}".</p>
+          </div>
+        )}
+        {wines.length === 0 && (
+          <div className={styles.emptyState}>
+            <p>No wines in the cellar yet.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Cards */}
+      <div className={styles.mobileCards}>
+        {filteredAndSortedWines.map((wine, index) => (
+          <div
+            key={`${wine.name}-${wine.year}-${index}`}
+            className={styles.wineCard}
+          >
+            <div className={styles.cardHeader}>
+              <h3 className={styles.cardWineName}>{wine.name}</h3>
+              <span className={styles.cardYear}>{wine.year}</span>
+            </div>
+
+            <div className={styles.cardBody}>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Type:</span>
+                <span
+                  className={`${styles.kindBadge} ${
+                    styles[wine.kind.toLowerCase()]
+                  }`}
+                >
+                  {wine.kind}
+                </span>
+              </div>
+
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Origin:</span>
+                <span>
+                  {wine.country}, {wine.region}
+                </span>
+              </div>
+
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Grape:</span>
+                <span>{wine.grape}</span>
+              </div>
+
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Bought:</span>
+                <span>{wine.boughtAt.toLocaleDateString()}</span>
+              </div>
+
+              <div className={styles.cardFooter}>
+                <div className={styles.quantityInfo}>
+                  <span className={styles.cardLabel}>Quantity:</span>
+                  <span>{wine.quantity}</span>
+                </div>
+                <div className={styles.quantityInfo}>
+                  <span className={styles.cardLabel}>Remaining:</span>
+                  {wine.quantityLeft !== undefined ? (
+                    <span
+                      className={`${styles.quantityBadge} ${
+                        wine.quantityLeft === 0 ? styles.empty : ""
+                      }`}
+                    >
+                      {wine.quantityLeft}
+                    </span>
+                  ) : (
+                    <span>-</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {filteredAndSortedWines.length === 0 && searchTerm && (
+          <div className={styles.emptyState}>
+            <p>No wines found matching "{searchTerm}".</p>
+          </div>
+        )}
         {wines.length === 0 && (
           <div className={styles.emptyState}>
             <p>No wines in the cellar yet.</p>

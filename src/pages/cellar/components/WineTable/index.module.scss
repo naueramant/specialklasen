@@ -138,20 +138,190 @@
   font-style: italic;
 }
 
+// Mobile sort controls
+.mobileSortContainer {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.mobileSortSelect {
+  width: 100%;
+  padding: 0.75rem;
+  padding-right: 2.5rem; // Give more space for the dropdown arrow
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23EEE3D2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(238, 227, 210, 0.2);
+  }
+
+  option {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+  }
+}
+
+// Mobile cards
+.mobileCards {
+  display: none;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.wineCard {
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(148, 60, 30, 0.2);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(148, 60, 30, 0.2);
+}
+
+.cardWineName {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.cardYear {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(238, 227, 210, 0.8);
+  white-space: nowrap;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardLabel {
+  font-weight: 500;
+  color: rgba(238, 227, 210, 0.8);
+  min-width: 80px;
+  font-size: 0.9rem;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 60, 30, 0.1);
+}
+
+.quantityInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 // Responsive design
 @media (max-width: 768px) {
+  // Hide desktop table
+  .tableContainer {
+    display: none;
+  }
+
+  // Show mobile elements
+  .mobileSortContainer {
+    display: block;
+  }
+
+  .mobileCards {
+    display: flex;
+  }
+
+  // Adjust search input for mobile
+  .searchInput {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  // Adjust badges for mobile
+  .kindBadge,
+  .quantityBadge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  // Stack card rows on very small screens
+  @media (max-width: 480px) {
+    .cardRow {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .cardLabel {
+      min-width: auto;
+      font-size: 0.8rem;
+    }
+
+    .cardFooter {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quantityInfo {
+      justify-content: space-between;
+    }
+  }
+}
+
+// Desktop-only styles (keep table visible on larger screens)
+@media (min-width: 769px) {
   .table {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 
     th,
     td {
-      padding: 0.5rem;
+      padding: 1rem;
     }
   }
 
-  .kindBadge,
-  .quantityBadge {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.4rem;
+  .mobileCards {
+    display: none;
+  }
+
+  .mobileSortContainer {
+    display: none;
   }
 }
