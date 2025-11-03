@@ -1,0 +1,72 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  align-items: center;
+
+  font-family: "Anton", sans-serif;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+
+  max-width: var(--content-width);
+  margin: 0 auto;
+
+  .logo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
+
+    svg {
+      transform: rotate(-20deg);
+
+      &:hover {
+        animation: swing 0.5s ease-in-out;
+      }
+
+      @keyframes swing {
+        0% {
+          transform: rotate(-20deg);
+        }
+        50% {
+          transform: rotate(20deg);
+        }
+        100% {
+          transform: rotate(-20deg);
+        }
+      }
+    }
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    font-size: 1.2rem;
+
+    a {
+      color: var(--color-primary);
+      font-weight: bold;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+        
+      }
+    }
+  }
+}
+
+main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  margin-top: 3rem;
+}

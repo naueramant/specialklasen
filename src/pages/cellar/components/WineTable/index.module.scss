@@ -1,0 +1,157 @@
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--color-primary);
+  box-sizing: border-box;
+}
+
+.searchContainer {
+  margin-bottom: 1rem;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius);
+  border: 2px solid var(--color-primary);
+  box-sizing: border-box;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  border: 1px solid rgba(148, 60, 30, 0.3);
+  border-radius: 4px;
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+
+  &::placeholder {
+    color: rgba(238, 227, 210, 0.6);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 2px rgba(238, 227, 210, 0.2);
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(148, 60, 30, 0.2);
+  }
+
+  th {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(148, 60, 30, 0.8);
+      }
+    }
+  }
+
+  tbody tr {
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(148, 60, 30, 0.1);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    color: var(--color-text);
+  }
+}
+
+.wineName {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.kindBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.red {
+    background-color: rgba(220, 38, 127, 0.2);
+    color: #ff6b9d;
+  }
+
+  &.white {
+    background-color: rgba(255, 206, 84, 0.2);
+    color: #ffd700;
+  }
+
+  &.sparkling {
+    background-color: rgba(123, 104, 238, 0.2);
+    color: #b19cd9;
+  }
+
+  &.rosé {
+    background-color: rgba(255, 182, 193, 0.2);
+    color: #ffb6c1;
+  }
+}
+
+.quantityBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+
+  &.empty {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+  }
+}
+
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(238, 227, 210, 0.6);
+  font-style: italic;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.8rem;
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+
+  .kindBadge,
+  .quantityBadge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}

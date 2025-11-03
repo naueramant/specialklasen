@@ -1,0 +1,24 @@
+.card {
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  border: 2px solid transparent;
+
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+
+  &:hover {
+    background-color: var(--color-background);
+    box-sizing: border-box;
+    border: 2px solid var(--color-primary);
+  }
+
+  &.outlined {
+    border: 2px solid var(--color-primary);
+    background-color: transparent;
+
+    &:hover {
+      background-color: var(--color-primary);
+      color: var(--color-background);
+    }
+  }
+}

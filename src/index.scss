@@ -1,0 +1,47 @@
+@import "@fontsource/mona-sans/200.css";
+@import "@fontsource/mona-sans/300.css";
+@import "@fontsource/mona-sans/400.css";
+@import "@fontsource/mona-sans/500.css";
+@import "@fontsource/mona-sans/600.css";
+@import "@fontsource/mona-sans/700.css";
+@import "@fontsource/mona-sans/800.css";
+@import "@fontsource/mona-sans/900.css";
+@import "@fontsource/anton/400.css";
+
+:root {
+  font-family: "Mona Sans", sans-serif;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color-text);
+  background-color: var(--color-secondary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Color theme */
+
+:root {
+  --color-primary: #943c1e;
+  --color-secondary: #1c1a1b;
+  --color-text: #eee3d2;
+
+  --border-radius: 0px;
+
+  --content-width: 1600px;
+}
+
+// fade in page on load
+body {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}

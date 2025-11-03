@@ -1,0 +1,61 @@
+import type { Wine } from "./models/wines";
+
+const wines: Wine[] = [
+  {
+    name: "Château Margaux",
+    year: 2015,
+    country: "France",
+    region: "Bordeaux",
+    grape: "Cabernet Sauvignon",
+    kind: "Red",
+    boughtAt: new Date("2020-01-01"),
+    quantity: 6,
+    quantityLeft: 4,
+  },
+  {
+    name: "Sassicaia",
+    year: 2016,
+    country: "Italy",
+    region: "Tuscany",
+    grape: "Cabernet Sauvignon",
+    kind: "Red",
+    boughtAt: new Date("2004-01-05"),
+    quantity: 3,
+    quantityLeft: 0,
+  },
+  {
+    name: "Penfolds Grange",
+    year: 2014,
+    country: "Australia",
+    region: "South Australia",
+    grape: "Shiraz",
+    kind: "Red",
+    boughtAt: new Date("2020-01-01"),
+    quantity: 2,
+    quantityLeft: 1,
+  },
+  {
+    name: "Cloudy Bay Sauvignon Blanc",
+    year: 2020,
+    country: "New Zealand",
+    region: "Marlborough",
+    grape: "Sauvignon Blanc",
+    kind: "White",
+    boughtAt: new Date("2025-01-01"),
+    quantity: 5,
+    quantityLeft: 5,
+  },
+  {
+    name: "Dom Pérignon",
+    year: 2012,
+    country: "France",
+    region: "Champagne",
+    grape: "Chardonnay, Pinot Noir",
+    kind: "Sparkling",
+    boughtAt: new Date("2023-01-01"),
+    quantity: 4,
+    quantityLeft: 2,
+  },
+];
+
+export default wines;
