@@ -18,7 +18,6 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
         <nav>
           <NavLink to="/cellar">Cellar</NavLink>
           <NavLink to="/calendar">Calendar</NavLink>
-          <NavLink to="/gallery">Gallery</NavLink>
         </nav>
       </header>
 
