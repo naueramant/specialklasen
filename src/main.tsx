@@ -6,7 +6,6 @@ import "./index.scss";
 import IndexPage from "./pages";
 import CalendarPage from "./pages/calendar";
 import CellarPage from "./pages/cellar";
-import GalleryPage from "./pages/gallery";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,7 +15,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<IndexPage />} />
           <Route path="/cellar" element={<CellarPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
