@@ -78,6 +78,14 @@
       border-bottom: none;
     }
   }
+}
+
+.clickableRow {
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(148, 60, 30, 0.15) !important;
+  }
 
   td {
     color: var(--color-text);
@@ -191,6 +199,15 @@
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(148, 60, 30, 0.2);
+  }
+}
+
+.clickableCard {
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(148, 60, 30, 0.3) !important;
   }
 }
 

@@ -1,6 +1,7 @@
 import type { FunctionComponent } from "react";
 import { useMemo, useState } from "react";
 import type { Wine } from "../../../../models/wines";
+import WineDetailsModal from "../WineDetailsModal/index";
 import styles from "./index.module.scss";
 
 interface WineTableProps {
@@ -14,6 +15,8 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedWine, setSelectedWine] = useState<Wine | null>(null);
+  const [showWineDetails, setShowWineDetails] = useState(false);
 
   const filteredAndSortedWines = useMemo(() => {
     // First filter wines based on search term
@@ -73,12 +76,22 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
     return sortDirection === "asc" ? " ↑" : " ↓";
   };
 
+  const handleWineClick = (wine: Wine) => {
+    setSelectedWine(wine);
+    setShowWineDetails(true);
+  };
+
+  const handleCloseWineDetails = () => {
+    setShowWineDetails(false);
+    setSelectedWine(null);
+  };
+
   return (
     <>
       <div className={styles.searchContainer}>
         <input
           type="text"
-          placeholder="Search wines..."
+          placeholder="Søg vine..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
@@ -99,26 +112,26 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
           }}
           className={styles.mobileSortSelect}
         >
-          <option value="name-asc">Name (A-Z)</option>
-          <option value="name-desc">Name (Z-A)</option>
-          <option value="year-desc">Year (Newest)</option>
-          <option value="year-asc">Year (Oldest)</option>
-          <option value="country-asc">Country (A-Z)</option>
-          <option value="country-desc">Country (Z-A)</option>
+          <option value="name-asc">Navn (A-Z)</option>
+          <option value="name-desc">Navn (Z-A)</option>
+          <option value="year-desc">År (Nyeste)</option>
+          <option value="year-asc">År (Ældste)</option>
+          <option value="country-asc">Land (A-Z)</option>
+          <option value="country-desc">Land (Z-A)</option>
           <option value="region-asc">Region (A-Z)</option>
           <option value="region-desc">Region (Z-A)</option>
-          <option value="grape-asc">Grape (A-Z)</option>
-          <option value="grape-desc">Grape (Z-A)</option>
-          <option value="kind-asc">Kind (A-Z)</option>
-          <option value="kind-desc">Kind (Z-A)</option>
-          <option value="location-asc">Location (A-Z)</option>
-          <option value="location-desc">Location (Z-A)</option>
-          <option value="bought-desc">Bought (Newest)</option>
-          <option value="bought-asc">Bought (Oldest)</option>
-          <option value="quantity-desc">Quantity (Most)</option>
-          <option value="quantity-asc">Quantity (Least)</option>
-          <option value="remaining-desc">Remaining (Most)</option>
-          <option value="remaining-asc">Remaining (Least)</option>
+          <option value="grape-asc">Drue (A-Z)</option>
+          <option value="grape-desc">Drue (Z-A)</option>
+          <option value="kind-asc">Type (A-Z)</option>
+          <option value="kind-desc">Type (Z-A)</option>
+          <option value="location-asc">Placering (A-Z)</option>
+          <option value="location-desc">Placering (Z-A)</option>
+          <option value="bought-desc">Købt (Nyeste)</option>
+          <option value="bought-asc">Købt (Ældste)</option>
+          <option value="quantity-desc">Antal (Flest)</option>
+          <option value="quantity-asc">Antal (Færrest)</option>
+          <option value="remaining-desc">Tilbage (Flest)</option>
+          <option value="remaining-asc">Tilbage (Færrest)</option>
         </select>
       </div>
 
@@ -131,19 +144,19 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 onClick={() => handleSort("name")}
                 className={styles.sortable}
               >
-                Name{getSortIcon("name")}
+                Navn{getSortIcon("name")}
               </th>
               <th
                 onClick={() => handleSort("year")}
                 className={styles.sortable}
               >
-                Year{getSortIcon("year")}
+                År{getSortIcon("year")}
               </th>
               <th
                 onClick={() => handleSort("country")}
                 className={styles.sortable}
               >
-                Country{getSortIcon("country")}
+                Land{getSortIcon("country")}
               </th>
               <th
                 onClick={() => handleSort("region")}
@@ -155,43 +168,47 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 onClick={() => handleSort("grape")}
                 className={styles.sortable}
               >
-                Grape{getSortIcon("grape")}
+                Drue{getSortIcon("grape")}
               </th>
               <th
                 onClick={() => handleSort("kind")}
                 className={styles.sortable}
               >
-                Kind{getSortIcon("kind")}
+                Type{getSortIcon("kind")}
               </th>
               <th
                 onClick={() => handleSort("location")}
                 className={styles.sortable}
               >
-                Location{getSortIcon("location")}
+                Placering{getSortIcon("location")}
               </th>
               <th
                 onClick={() => handleSort("bought")}
                 className={styles.sortable}
               >
-                Bought{getSortIcon("bought")}
+                Købt{getSortIcon("bought")}
               </th>
               <th
                 onClick={() => handleSort("quantity")}
                 className={styles.sortable}
               >
-                Quantity{getSortIcon("quantity")}
+                Antal{getSortIcon("quantity")}
               </th>
               <th
                 onClick={() => handleSort("remaining")}
                 className={styles.sortable}
               >
-                Remaining{getSortIcon("remaining")}
+                Tilbage{getSortIcon("remaining")}
               </th>
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedWines?.map((wine, index) => (
-              <tr key={`${wine.name}-${wine.year}-${index}`}>
+              <tr
+                key={`${wine.name}-${wine.year}-${index}`}
+                className={styles.clickableRow}
+                onClick={() => handleWineClick(wine)}
+              >
                 <td className={styles.wineName}>{wine.name}</td>
                 <td>{wine.year}</td>
                 <td>{wine.country}</td>
@@ -228,12 +245,12 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         </table>
         {filteredAndSortedWines?.length === 0 && searchTerm && (
           <div className={styles.emptyState}>
-            <p>No wines found matching "{searchTerm}".</p>
+            <p>Ingen vine fundet der matcher "{searchTerm}".</p>
           </div>
         )}
         {wines?.length === 0 && (
           <div className={styles.emptyState}>
-            <p>No wines in the cellar yet.</p>
+            <p>Ingen vine i kælderen endnu.</p>
           </div>
         )}
       </div>
@@ -243,7 +260,8 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         {filteredAndSortedWines?.map((wine, index) => (
           <div
             key={`${wine.name}-${wine.year}-${index}`}
-            className={styles.wineCard}
+            className={`${styles.wineCard} ${styles.clickableCard}`}
+            onClick={() => handleWineClick(wine)}
           >
             <div className={styles.cardHeader}>
               <h3 className={styles.cardWineName}>{wine.name}</h3>
@@ -263,34 +281,34 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Origin:</span>
+                <span className={styles.cardLabel}>Oprindelse:</span>
                 <span>
                   {wine.country}, {wine.region}
                 </span>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Grape:</span>
+                <span className={styles.cardLabel}>Drue:</span>
                 <span>{wine.grape}</span>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Location:</span>
+                <span className={styles.cardLabel}>Placering:</span>
                 <span>{wine.location}</span>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Bought:</span>
+                <span className={styles.cardLabel}>Købt:</span>
                 <span>{new Date(wine.bought).toLocaleDateString()}</span>
               </div>
 
               <div className={styles.cardFooter}>
                 <div className={styles.quantityInfo}>
-                  <span className={styles.cardLabel}>Quantity:</span>
+                  <span className={styles.cardLabel}>Antal:</span>
                   <span>{wine.quantity}</span>
                 </div>
                 <div className={styles.quantityInfo}>
-                  <span className={styles.cardLabel}>Remaining:</span>
+                  <span className={styles.cardLabel}>Tilbage:</span>
                   {wine.remaining !== undefined ? (
                     <span
                       className={`${styles.quantityBadge} ${
@@ -310,15 +328,23 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
         {filteredAndSortedWines?.length === 0 && searchTerm && (
           <div className={styles.emptyState}>
-            <p>No wines found matching "{searchTerm}".</p>
+            <p>Ingen vine fundet der matcher "{searchTerm}".</p>
           </div>
         )}
         {wines?.length === 0 && (
           <div className={styles.emptyState}>
-            <p>No wines in the cellar yet.</p>
+            <p>Ingen vine i kælderen endnu.</p>
           </div>
         )}
       </div>
+
+      {selectedWine && (
+        <WineDetailsModal
+          wine={selectedWine}
+          isOpen={showWineDetails}
+          onClose={handleCloseWineDetails}
+        />
+      )}
     </>
   );
 };
