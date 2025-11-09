@@ -14,22 +14,6 @@ services:
       timeout: 5s
       retries: 5
 
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: specialklasen_frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - VITE_POCKETBASE_URL=http://localhost:8090
-    depends_on:
-      pocketbase:
-        condition: service_healthy
-
 volumes:
   pocketbase_data:
   pocketbase_public:
