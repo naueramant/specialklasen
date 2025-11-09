@@ -1,16 +1,20 @@
-import type { FunctionComponent } from "react";
+import { useState, type FunctionComponent } from "react";
 import Card from "../../components/Card";
 import { ImpactText } from "../../components/Text";
 import type { Event } from "../../models/event";
 import { useEvents } from "../../services/api/events";
+import AddEventToCalendar from "./components/AddEventToCalendarModal";
+import { addEventToCalendar } from "./components/AddEventToCalendarModal/helper";
 import styles from "./index.module.scss";
 
 const CalendarPage: FunctionComponent = () => {
   const { data: events = [] } = useEvents();
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   // Group events by year
   const eventsByYear = events.reduce((acc, event) => {
-    const year = new Date(event.date).getFullYear();
+    const year = new Date(event.startDate).getFullYear();
     if (!acc[year]) {
       acc[year] = [];
     }
@@ -24,7 +28,7 @@ const CalendarPage: FunctionComponent = () => {
     .sort((a, b) => b - a);
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString("da-DK", {
       month: "short",
       day: "numeric",
     });
@@ -35,6 +39,24 @@ const CalendarPage: FunctionComponent = () => {
   };
 
   const currentDate = new Date();
+
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setSelectedEvent(null);
+  };
+
+  const handleAddToCalendar = () => {
+    if (!selectedEvent) return;
+
+    addEventToCalendar(selectedEvent);
+
+    handleClosePopup();
+  };
 
   return (
     <div className={styles.calendar}>
@@ -48,19 +70,23 @@ const CalendarPage: FunctionComponent = () => {
             {eventsByYear[year]
               .sort(
                 (a, b) =>
-                  new Date(a.date).getTime() - new Date(b.date).getTime()
+                  new Date(a.startDate).getTime() -
+                  new Date(b.startDate).getTime()
               )
               .map((event, index) => {
-                const isFutureEvent = new Date(event.date) > currentDate;
+                const isFutureEvent = new Date(event.startDate) > currentDate;
                 return (
                   <Card
                     key={index}
                     variant={isFutureEvent ? "solid" : "outlined"}
                   >
-                    <div className={styles.eventCard}>
+                    <div
+                      className={styles.eventCard}
+                      onClick={() => handleEventClick(event)}
+                    >
                       <div className={styles.eventHeader}>
                         <div className={styles.eventDate}>
-                          {formatDate(new Date(event.date))}
+                          {formatDate(new Date(event.startDate))}
                         </div>
                         <div className={styles.eventLocation}>
                           {formatLocation(event.location)}
@@ -79,6 +105,15 @@ const CalendarPage: FunctionComponent = () => {
           </div>
         </div>
       ))}
+
+      {selectedEvent && (
+        <AddEventToCalendar
+          event={selectedEvent}
+          isOpen={showPopup}
+          onClose={handleClosePopup}
+          onConfirm={handleAddToCalendar}
+        />
+      )}
     </div>
   );
 };

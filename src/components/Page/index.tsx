@@ -1,4 +1,5 @@
 import type { FunctionComponent } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { PiWineFill } from "react-icons/pi";
 import { NavLink } from "react-router";
 import { isLoggedInAsAdmin } from "../../services/admin/user";
@@ -23,7 +24,12 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
           <NavLink to="/calendar">Kalender</NavLink>
           <NavLink to="/articles-of-association">Vedtægter</NavLink>
 
-          {isAdmin && <a href="/_">Admin</a>}
+          {isAdmin && (
+            <a href="/_" target="_blank">
+              Admin
+              <FaExternalLinkAlt size={14} />
+            </a>
+          )}
         </nav>
       </header>
 

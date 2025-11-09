@@ -2,5 +2,6 @@ export interface Event {
   title: string;
   description: string;
   location: string;
-  date: string;
+  startDate: string;
+  endDate: string;
 }
