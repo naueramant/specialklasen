@@ -12,6 +12,8 @@
   "dependencies": {
     "@fontsource/anton": "^5.2.7",
     "@fontsource/mona-sans": "^5.2.8",
+    "@tanstack/react-query": "^5.90.7",
+    "pocketbase": "^0.26.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",

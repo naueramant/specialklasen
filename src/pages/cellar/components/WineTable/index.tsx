@@ -1,10 +1,10 @@
 import type { FunctionComponent } from "react";
 import { useMemo, useState } from "react";
-import type { Wine } from "../../models/wines";
+import type { Wine } from "../../../../models/wines";
 import styles from "./index.module.scss";
 
 interface WineTableProps {
-  wines: Wine[];
+  wines?: Wine[];
 }
 
 type SortField = keyof Wine;
@@ -17,7 +17,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
   const filteredAndSortedWines = useMemo(() => {
     // First filter wines based on search term
-    const filtered = wines.filter((wine) => {
+    const filtered = wines?.filter((wine) => {
       if (!searchTerm) return true;
 
       const searchLower = searchTerm.toLowerCase();
@@ -27,7 +27,8 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         wine.region.toLowerCase().includes(searchLower) ||
         wine.grape.toLowerCase().includes(searchLower) ||
         wine.kind.toLowerCase().includes(searchLower) ||
-        wine.boughtAt
+        wine.location.toLowerCase().includes(searchLower) ||
+        new Date(wine.bought)
           .toLocaleDateString()
           .toLowerCase()
           .includes(searchLower) ||
@@ -36,7 +37,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
     });
 
     // Then sort the filtered results
-    return filtered.sort((a, b) => {
+    return filtered?.sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
 
@@ -110,12 +111,14 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
           <option value="grape-desc">Grape (Z-A)</option>
           <option value="kind-asc">Kind (A-Z)</option>
           <option value="kind-desc">Kind (Z-A)</option>
-          <option value="boughtAt-desc">Bought (Newest)</option>
-          <option value="boughtAt-asc">Bought (Oldest)</option>
+          <option value="location-asc">Location (A-Z)</option>
+          <option value="location-desc">Location (Z-A)</option>
+          <option value="bought-desc">Bought (Newest)</option>
+          <option value="bought-asc">Bought (Oldest)</option>
           <option value="quantity-desc">Quantity (Most)</option>
           <option value="quantity-asc">Quantity (Least)</option>
-          <option value="quantityLeft-desc">Remaining (Most)</option>
-          <option value="quantityLeft-asc">Remaining (Least)</option>
+          <option value="remaining-desc">Remaining (Most)</option>
+          <option value="remaining-asc">Remaining (Least)</option>
         </select>
       </div>
 
@@ -161,10 +164,16 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 Kind{getSortIcon("kind")}
               </th>
               <th
-                onClick={() => handleSort("boughtAt")}
+                onClick={() => handleSort("location")}
                 className={styles.sortable}
               >
-                Bought{getSortIcon("boughtAt")}
+                Location{getSortIcon("location")}
+              </th>
+              <th
+                onClick={() => handleSort("bought")}
+                className={styles.sortable}
+              >
+                Bought{getSortIcon("bought")}
               </th>
               <th
                 onClick={() => handleSort("quantity")}
@@ -173,15 +182,15 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 Quantity{getSortIcon("quantity")}
               </th>
               <th
-                onClick={() => handleSort("quantityLeft")}
+                onClick={() => handleSort("remaining")}
                 className={styles.sortable}
               >
-                Remaining{getSortIcon("quantityLeft")}
+                Remaining{getSortIcon("remaining")}
               </th>
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedWines.map((wine, index) => (
+            {filteredAndSortedWines?.map((wine, index) => (
               <tr key={`${wine.name}-${wine.year}-${index}`}>
                 <td className={styles.wineName}>{wine.name}</td>
                 <td>{wine.year}</td>
@@ -197,16 +206,17 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                     {wine.kind}
                   </span>
                 </td>
-                <td>{wine.boughtAt.toLocaleDateString()}</td>
+                <td>{wine.location}</td>
+                <td>{new Date(wine.bought).toLocaleDateString()}</td>
                 <td>{wine.quantity}</td>
                 <td>
-                  {wine.quantityLeft !== undefined ? (
+                  {wine.remaining !== undefined ? (
                     <span
                       className={`${styles.quantityBadge} ${
-                        wine.quantityLeft === 0 ? styles.empty : ""
+                        wine.remaining === 0 ? styles.empty : ""
                       }`}
                     >
-                      {wine.quantityLeft}
+                      {wine.remaining}
                     </span>
                   ) : (
                     "-"
@@ -216,12 +226,12 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
             ))}
           </tbody>
         </table>
-        {filteredAndSortedWines.length === 0 && searchTerm && (
+        {filteredAndSortedWines?.length === 0 && searchTerm && (
           <div className={styles.emptyState}>
             <p>No wines found matching "{searchTerm}".</p>
           </div>
         )}
-        {wines.length === 0 && (
+        {wines?.length === 0 && (
           <div className={styles.emptyState}>
             <p>No wines in the cellar yet.</p>
           </div>
@@ -230,7 +240,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
       {/* Mobile Cards */}
       <div className={styles.mobileCards}>
-        {filteredAndSortedWines.map((wine, index) => (
+        {filteredAndSortedWines?.map((wine, index) => (
           <div
             key={`${wine.name}-${wine.year}-${index}`}
             className={styles.wineCard}
@@ -265,8 +275,13 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
               </div>
 
               <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Location:</span>
+                <span>{wine.location}</span>
+              </div>
+
+              <div className={styles.cardRow}>
                 <span className={styles.cardLabel}>Bought:</span>
-                <span>{wine.boughtAt.toLocaleDateString()}</span>
+                <span>{new Date(wine.bought).toLocaleDateString()}</span>
               </div>
 
               <div className={styles.cardFooter}>
@@ -276,13 +291,13 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 </div>
                 <div className={styles.quantityInfo}>
                   <span className={styles.cardLabel}>Remaining:</span>
-                  {wine.quantityLeft !== undefined ? (
+                  {wine.remaining !== undefined ? (
                     <span
                       className={`${styles.quantityBadge} ${
-                        wine.quantityLeft === 0 ? styles.empty : ""
+                        wine.remaining === 0 ? styles.empty : ""
                       }`}
                     >
-                      {wine.quantityLeft}
+                      {wine.remaining}
                     </span>
                   ) : (
                     <span>-</span>
@@ -293,12 +308,12 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
           </div>
         ))}
 
-        {filteredAndSortedWines.length === 0 && searchTerm && (
+        {filteredAndSortedWines?.length === 0 && searchTerm && (
           <div className={styles.emptyState}>
             <p>No wines found matching "{searchTerm}".</p>
           </div>
         )}
-        {wines.length === 0 && (
+        {wines?.length === 0 && (
           <div className={styles.emptyState}>
             <p>No wines in the cellar yet.</p>
           </div>
