@@ -60,51 +60,62 @@ const CalendarPage: FunctionComponent = () => {
 
   return (
     <div className={styles.calendar}>
-      {sortedYears.map((year) => (
-        <div key={year} className={styles.yearSection}>
-          <div className={styles.yearHeader}>
-            <ImpactText>{year}</ImpactText>
-          </div>
-
-          <div className={styles.eventsGrid}>
-            {eventsByYear[year]
-              .sort(
-                (a, b) =>
-                  new Date(a.startDate).getTime() -
-                  new Date(b.startDate).getTime()
-              )
-              .map((event, index) => {
-                const isFutureEvent = new Date(event.startDate) > currentDate;
-                return (
-                  <Card
-                    key={index}
-                    variant={isFutureEvent ? "solid" : "outlined"}
-                  >
-                    <div
-                      className={styles.eventCard}
-                      onClick={() => handleEventClick(event)}
-                    >
-                      <div className={styles.eventHeader}>
-                        <div className={styles.eventDate}>
-                          {formatDate(new Date(event.startDate))}
-                        </div>
-                        <div className={styles.eventLocation}>
-                          {formatLocation(event.location)}
-                        </div>
-                      </div>
-
-                      <div className={styles.eventTitle}>{event.title}</div>
-
-                      <div
-                        dangerouslySetInnerHTML={{ __html: event.description }}
-                      />
-                    </div>
-                  </Card>
-                );
-              })}
-          </div>
+      {events.length === 0 ? (
+        <div className={styles.emptyState}>
+          <ImpactText>Ingen kommende begivenheder</ImpactText>
+          <p className={styles.emptyStateText}>
+            Der er i øjeblikket ingen begivenheder planlagt.
+          </p>
         </div>
-      ))}
+      ) : (
+        sortedYears.map((year) => (
+          <div key={year} className={styles.yearSection}>
+            <div className={styles.yearHeader}>
+              <ImpactText>{year}</ImpactText>
+            </div>
+
+            <div className={styles.eventsGrid}>
+              {eventsByYear[year]
+                .sort(
+                  (a, b) =>
+                    new Date(a.startDate).getTime() -
+                    new Date(b.startDate).getTime()
+                )
+                .map((event, index) => {
+                  const isFutureEvent = new Date(event.startDate) > currentDate;
+                  return (
+                    <Card
+                      key={index}
+                      variant={isFutureEvent ? "solid" : "outlined"}
+                    >
+                      <div
+                        className={styles.eventCard}
+                        onClick={() => handleEventClick(event)}
+                      >
+                        <div className={styles.eventHeader}>
+                          <div className={styles.eventDate}>
+                            {formatDate(new Date(event.startDate))}
+                          </div>
+                          <div className={styles.eventLocation}>
+                            {formatLocation(event.location)}
+                          </div>
+                        </div>
+
+                        <div className={styles.eventTitle}>{event.title}</div>
+
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: event.description,
+                          }}
+                        />
+                      </div>
+                    </Card>
+                  );
+                })}
+            </div>
+          </div>
+        ))
+      )}
 
       {selectedEvent && (
         <AddEventToCalendar

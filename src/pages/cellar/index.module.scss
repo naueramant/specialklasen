@@ -1,0 +1,16 @@
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+}
+
+.emptyStateText {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: var(--color-text);
+  opacity: 0.7;
+}
