@@ -2,23 +2,40 @@
 
 ## Development
 
-### 1) Install dependencies:
+### Prerequisites
 
 - Docker
 - Node.js
 - pnpm
+- make
 
-### 2) Start PocketBase
+### Quick Start
+
+Start the development environment (PocketBase + React dev server):
 
 ```bash
-docker compose up -d
+make start
 ```
 
-### 3) Start vite development server
+This will:
+- Start PocketBase in Docker
+- Wait for PocketBase to be healthy
+- Create an admin user (email: `super@specialklasen.com`, password: `password`)
+- Install npm dependencies
+- Start the Vite development server
+
+Then the application will be accessible at [http://localhost:5173](http://localhost:5173) and the PocketBase admin UI at [http://localhost:5173/_/](http://localhost:5173/_/).
+
+Stop the development environment containers:
 
 ```bash
-pnpm install
-pnpm dev
+make stop
+```
+
+View all available commands:
+
+```bash
+make help
 ```
 
 ## Build docker image
@@ -34,7 +51,7 @@ Migrations stored in the [migrations](./migrations) folder will be automatically
 ### Creating a new collections snapshot
 
 ```bash
-docker compose exec pocketbase pocketbase migrate collections
+make snapshot
 ```
 
 For more information, see the [PocketBase documentation](https://pocketbase.io/docs/migrations/).
