@@ -29,6 +29,7 @@ RUN apk add --no-cache ca-certificates
 
 COPY --from=pocketbase /pb/pocketbase /pb/pocketbase
 COPY --from=builder /app/dist /pb/pb_public
+COPY ./migrations /pb/pb_migrations
 
 # start PocketBase
 WORKDIR /pb
