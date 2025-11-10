@@ -39,22 +39,22 @@ const IndexPage: FunctionComponent = () => {
           <p>Jeg er her bare for vinen 🍷</p>
         </Card>
         <Card>
-          <Image src="/images/members/3.jpg" />
+          <Image src="/images/members/2.jpg" />
           <h3>Mads Sejer</h3>
           <p>Fuck det er fattigt 💸</p>
         </Card>
         <Card>
-          <Image src="/images/members/6.jpg" />
+          <Image src="/images/members/3.jpg" />
           <h3>Jonas Tranberg</h3>
           <p>Om vi kan!</p>
         </Card>
         <Card>
-          <Image src="/images/members/7.jpg" />
+          <Image src="/images/members/4.jpg" />
           <h3>Jacob Winther</h3>
           <p>Vil du med hjem og se mit vinkøleskab? 🍆</p>
         </Card>
         <Card>
-          <Image src="/images/members/4.jpg" zoom={1.5} top={-50} left={-50} />
+          <Image src="/images/members/5.jpg" zoom={1.5} top={-50} left={-50} />
           <h3>Peter Ring</h3>
           <p>Wauw, det fortov ser blødt ud! ⭐⭐⭐⭐⭐</p>
         </Card>
