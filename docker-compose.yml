@@ -3,6 +3,7 @@ services:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: specialklasen_pocketbase
     restart: unless-stopped
+    command: --automigrate=0
     ports:
       - "8090:8090"
     volumes:

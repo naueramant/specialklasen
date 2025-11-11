@@ -861,7 +861,9 @@ migrate((app) => {
           "values": [
             "RED",
             "WHITE",
-            "SPARKLING"
+            "SPARKLING",
+            "ROSÉ",
+            "FORTIFIED"
           ]
         },
         {
@@ -889,6 +891,18 @@ migrate((app) => {
         },
         {
           "hidden": false,
+          "id": "number3402113753",
+          "max": null,
+          "min": null,
+          "name": "price",
+          "onlyInt": false,
+          "presentable": false,
+          "required": false,
+          "system": false,
+          "type": "number"
+        },
+        {
+          "hidden": false,
           "id": "number2683508278",
           "max": null,
           "min": null,
@@ -912,18 +926,22 @@ migrate((app) => {
           "type": "number"
         },
         {
-          "autogeneratePattern": "",
           "hidden": false,
-          "id": "text1587448267",
-          "max": 0,
-          "min": 0,
+          "id": "select1587448267",
+          "maxSelect": 1,
           "name": "location",
-          "pattern": "",
           "presentable": false,
-          "primaryKey": false,
           "required": false,
           "system": false,
-          "type": "text"
+          "type": "select",
+          "values": [
+            "Jonas",
+            "Jacob",
+            "Jeppe",
+            "Peter",
+            "Mads",
+            "Ikke ankommet"
+          ]
         },
         {
           "convertURLs": false,
@@ -935,18 +953,6 @@ migrate((app) => {
           "required": false,
           "system": false,
           "type": "editor"
-        },
-        {
-          "hidden": false,
-          "id": "number3402113753",
-          "max": null,
-          "min": null,
-          "name": "price",
-          "onlyInt": false,
-          "presentable": false,
-          "required": false,
-          "system": false,
-          "type": "number"
         },
         {
           "hidden": false,
@@ -1022,17 +1028,6 @@ migrate((app) => {
           "type": "editor"
         },
         {
-          "hidden": false,
-          "id": "date2862495610",
-          "max": "",
-          "min": "",
-          "name": "startDate",
-          "presentable": false,
-          "required": true,
-          "system": false,
-          "type": "date"
-        },
-        {
           "autogeneratePattern": "",
           "hidden": false,
           "id": "text1587448267",
@@ -1045,6 +1040,17 @@ migrate((app) => {
           "required": true,
           "system": false,
           "type": "text"
+        },
+        {
+          "hidden": false,
+          "id": "date2862495610",
+          "max": "",
+          "min": "",
+          "name": "startDate",
+          "presentable": false,
+          "required": true,
+          "system": false,
+          "type": "date"
         },
         {
           "hidden": false,
