@@ -1,0 +1,8 @@
+.responsiveImage {
+    flex: 1 1 calc(20% - 10px);
+    max-width: calc(20% - 10px);
+    box-sizing: border-box;
+    width: 100%; /* Ensures the image scales properly */
+    height: auto; /* Maintains the aspect ratio */
+    object-fit: contain; /* Ensures the aspect ratio is preserved */
+}

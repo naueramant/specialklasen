@@ -1,0 +1,24 @@
+.albumCard {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    
+    max-height: 225px;
+    
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+}
+
+.seeMore {
+    background-color: var(--color-grey);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 calc(20% - 10px);
+    max-width: calc(20% - 10px);
+    box-sizing: border-box;
+}
