@@ -13,6 +13,7 @@ import { queryClient } from "./services/api/client";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <div className="snowfall" aria-hidden="true"></div>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Page>
@@ -32,4 +33,5 @@ createRoot(document.getElementById("root")!).render(
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>
+
 );
