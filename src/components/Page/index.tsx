@@ -1,9 +1,9 @@
-import type { FunctionComponent } from "react";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import { PiWineFill } from "react-icons/pi";
-import { NavLink } from "react-router";
-import { isLoggedInAsAdmin } from "../../services/admin/user";
-import styles from "./index.module.scss";
+import type { FunctionComponent } from 'react';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+import { PiWineFill } from 'react-icons/pi';
+import { NavLink } from 'react-router';
+import { isLoggedInAsAdmin } from '../../services/admin/user';
+import styles from './index.module.scss';
 
 interface PageProps {
   children?: React.ReactNode | React.ReactNode[];

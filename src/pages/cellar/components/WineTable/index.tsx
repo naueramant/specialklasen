@@ -1,20 +1,20 @@
-import type { FunctionComponent } from "react";
-import { useMemo, useState } from "react";
-import type { Wine } from "../../../../models/wines";
-import WineDetailsModal from "../WineDetailsModal/index";
-import styles from "./index.module.scss";
+import type { FunctionComponent } from 'react';
+import { useMemo, useState } from 'react';
+import type { Wine } from '../../../../models/wines';
+import WineDetailsModal from '../WineDetailsModal/index';
+import styles from './index.module.scss';
 
 interface WineTableProps {
   wines?: Wine[];
 }
 
 type SortField = keyof Wine;
-type SortDirection = "asc" | "desc";
+type SortDirection = 'asc' | 'desc';
 
 const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
-  const [sortField, setSortField] = useState<SortField>("name");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedWine, setSelectedWine] = useState<Wine | null>(null);
   const [showWineDetails, setShowWineDetails] = useState(false);
 
@@ -31,10 +31,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         wine.grape.toLowerCase().includes(searchLower) ||
         wine.kind.toLowerCase().includes(searchLower) ||
         wine.location.toLowerCase().includes(searchLower) ||
-        new Date(wine.bought)
-          .toLocaleDateString()
-          .toLowerCase()
-          .includes(searchLower) ||
+        new Date(wine.bought).toLocaleDateString().toLowerCase().includes(searchLower) ||
         wine.year.toString().includes(searchLower)
       );
     });
@@ -45,17 +42,15 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
       const bValue = b[sortField];
 
       if (aValue === undefined && bValue === undefined) return 0;
-      if (aValue === undefined) return sortDirection === "asc" ? 1 : -1;
-      if (bValue === undefined) return sortDirection === "asc" ? -1 : 1;
+      if (aValue === undefined) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue === undefined) return sortDirection === 'asc' ? -1 : 1;
 
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
       }
 
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
       }
 
       return 0;
@@ -64,16 +59,16 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
-      setSortDirection("asc");
+      setSortDirection('asc');
     }
   };
 
   const getSortIcon = (field: SortField) => {
-    if (sortField !== field) return "";
-    return sortDirection === "asc" ? " ↑" : " ↓";
+    if (sortField !== field) return '';
+    return sortDirection === 'asc' ? ' ↑' : ' ↓';
   };
 
   const handleWineClick = (wine: Wine) => {
@@ -89,13 +84,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
   return (
     <>
       <div className={styles.searchContainer}>
-        <input
-          type="text"
-          placeholder="Søg vine..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className={styles.searchInput}
-        />
+        <input type="text" placeholder="Søg vine..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={styles.searchInput} />
       </div>
 
       {/* Mobile Sort Controls */}
@@ -103,10 +92,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         <select
           value={`${sortField}-${sortDirection}`}
           onChange={(e) => {
-            const [field, direction] = e.target.value.split("-") as [
-              SortField,
-              SortDirection
-            ];
+            const [field, direction] = e.target.value.split('-') as [SortField, SortDirection];
             setSortField(field);
             setSortDirection(direction);
           }}
@@ -140,105 +126,53 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th
-                onClick={() => handleSort("name")}
-                className={styles.sortable}
-              >
-                Navn{getSortIcon("name")}
+              <th onClick={() => handleSort('name')} className={styles.sortable}>
+                Navn{getSortIcon('name')}
               </th>
-              <th
-                onClick={() => handleSort("year")}
-                className={styles.sortable}
-              >
-                År{getSortIcon("year")}
+              <th onClick={() => handleSort('year')} className={styles.sortable}>
+                År{getSortIcon('year')}
               </th>
-              <th
-                onClick={() => handleSort("country")}
-                className={styles.sortable}
-              >
-                Land{getSortIcon("country")}
+              <th onClick={() => handleSort('country')} className={styles.sortable}>
+                Land{getSortIcon('country')}
               </th>
-              <th
-                onClick={() => handleSort("region")}
-                className={styles.sortable}
-              >
-                Region{getSortIcon("region")}
+              <th onClick={() => handleSort('region')} className={styles.sortable}>
+                Region{getSortIcon('region')}
               </th>
-              <th
-                onClick={() => handleSort("grape")}
-                className={styles.sortable}
-              >
-                Drue{getSortIcon("grape")}
+              <th onClick={() => handleSort('grape')} className={styles.sortable}>
+                Drue{getSortIcon('grape')}
               </th>
-              <th
-                onClick={() => handleSort("kind")}
-                className={styles.sortable}
-              >
-                Type{getSortIcon("kind")}
+              <th onClick={() => handleSort('kind')} className={styles.sortable}>
+                Type{getSortIcon('kind')}
               </th>
-              <th
-                onClick={() => handleSort("location")}
-                className={styles.sortable}
-              >
-                Placering{getSortIcon("location")}
+              <th onClick={() => handleSort('location')} className={styles.sortable}>
+                Placering{getSortIcon('location')}
               </th>
-              <th
-                onClick={() => handleSort("bought")}
-                className={styles.sortable}
-              >
-                Købt{getSortIcon("bought")}
+              <th onClick={() => handleSort('bought')} className={styles.sortable}>
+                Købt{getSortIcon('bought')}
               </th>
-              <th
-                onClick={() => handleSort("quantity")}
-                className={styles.sortable}
-              >
-                Antal{getSortIcon("quantity")}
+              <th onClick={() => handleSort('quantity')} className={styles.sortable}>
+                Antal{getSortIcon('quantity')}
               </th>
-              <th
-                onClick={() => handleSort("remaining")}
-                className={styles.sortable}
-              >
-                Tilbage{getSortIcon("remaining")}
+              <th onClick={() => handleSort('remaining')} className={styles.sortable}>
+                Tilbage{getSortIcon('remaining')}
               </th>
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedWines?.map((wine, index) => (
-              <tr
-                key={`${wine.name}-${wine.year}-${index}`}
-                className={styles.clickableRow}
-                onClick={() => handleWineClick(wine)}
-              >
+              <tr key={`${wine.name}-${wine.year}-${index}`} className={styles.clickableRow} onClick={() => handleWineClick(wine)}>
                 <td className={styles.wineName}>{wine.name}</td>
                 <td>{wine.year}</td>
                 <td>{wine.country}</td>
                 <td>{wine.region}</td>
                 <td>{wine.grape}</td>
                 <td>
-                  <span
-                    className={`${styles.kindBadge} ${
-                      styles[wine.kind.toLowerCase()]
-                    }`}
-                  >
-                    {wine.kind}
-                  </span>
+                  <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
                 </td>
                 <td>{wine.location}</td>
                 <td>{new Date(wine.bought).toLocaleDateString()}</td>
                 <td>{wine.quantity}</td>
-                <td>
-                  {wine.remaining !== undefined ? (
-                    <span
-                      className={`${styles.quantityBadge} ${
-                        wine.remaining === 0 ? styles.empty : ""
-                      }`}
-                    >
-                      {wine.remaining}
-                    </span>
-                  ) : (
-                    "-"
-                  )}
-                </td>
+                <td>{wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : '-'}</td>
               </tr>
             ))}
           </tbody>
@@ -258,11 +192,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
       {/* Mobile Cards */}
       <div className={styles.mobileCards}>
         {filteredAndSortedWines?.map((wine, index) => (
-          <div
-            key={`${wine.name}-${wine.year}-${index}`}
-            className={`${styles.wineCard} ${styles.clickableCard}`}
-            onClick={() => handleWineClick(wine)}
-          >
+          <div key={`${wine.name}-${wine.year}-${index}`} className={`${styles.wineCard} ${styles.clickableCard}`} onClick={() => handleWineClick(wine)}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardWineName}>{wine.name}</h3>
               <span className={styles.cardYear}>{wine.year}</span>
@@ -271,13 +201,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
             <div className={styles.cardBody}>
               <div className={styles.cardRow}>
                 <span className={styles.cardLabel}>Type:</span>
-                <span
-                  className={`${styles.kindBadge} ${
-                    styles[wine.kind.toLowerCase()]
-                  }`}
-                >
-                  {wine.kind}
-                </span>
+                <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
               </div>
 
               <div className={styles.cardRow}>
@@ -309,17 +233,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 </div>
                 <div className={styles.quantityInfo}>
                   <span className={styles.cardLabel}>Tilbage:</span>
-                  {wine.remaining !== undefined ? (
-                    <span
-                      className={`${styles.quantityBadge} ${
-                        wine.remaining === 0 ? styles.empty : ""
-                      }`}
-                    >
-                      {wine.remaining}
-                    </span>
-                  ) : (
-                    <span>-</span>
-                  )}
+                  {wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : <span>-</span>}
                 </div>
               </div>
             </div>
@@ -338,13 +252,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         )}
       </div>
 
-      {selectedWine && (
-        <WineDetailsModal
-          wine={selectedWine}
-          isOpen={showWineDetails}
-          onClose={handleCloseWineDetails}
-        />
-      )}
+      {selectedWine && <WineDetailsModal wine={selectedWine} isOpen={showWineDetails} onClose={handleCloseWineDetails} />}
     </>
   );
 };

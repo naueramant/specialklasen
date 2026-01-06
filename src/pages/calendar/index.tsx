@@ -1,11 +1,11 @@
-import { useState, type FunctionComponent } from "react";
-import Card from "../../components/Card";
-import { ImpactText } from "../../components/Text";
-import type { Event } from "../../models/event";
-import { useEvents } from "../../services/api/events";
-import AddEventToCalendar from "./components/AddEventToCalendarModal";
-import { addEventToCalendar } from "./components/AddEventToCalendarModal/helper";
-import styles from "./index.module.scss";
+import { useState, type FunctionComponent } from 'react';
+import Card from '../../components/Card';
+import { ImpactText } from '../../components/Text';
+import type { Event } from '../../models/event';
+import { useEvents } from '../../services/api/events';
+import AddEventToCalendar from './components/AddEventToCalendarModal';
+import { addEventToCalendar } from './components/AddEventToCalendarModal/helper';
+import styles from './index.module.scss';
 
 const CalendarPage: FunctionComponent = () => {
   const { data: events = [] } = useEvents();
@@ -13,14 +13,17 @@ const CalendarPage: FunctionComponent = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   // Group events by year
-  const eventsByYear = events.reduce((acc, event) => {
-    const year = new Date(event.startDate).getFullYear();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(event);
-    return acc;
-  }, {} as Record<number, Event[]>);
+  const eventsByYear = events.reduce(
+    (acc, event) => {
+      const year = new Date(event.startDate).getFullYear();
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(event);
+      return acc;
+    },
+    {} as Record<number, Event[]>
+  );
 
   // Sort years in descending order
   const sortedYears = Object.keys(eventsByYear)
@@ -28,14 +31,14 @@ const CalendarPage: FunctionComponent = () => {
     .sort((a, b) => b - a);
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("da-DK", {
-      month: "short",
-      day: "numeric",
+    return date.toLocaleDateString('da-DK', {
+      month: 'short',
+      day: 'numeric',
     });
   };
 
   const formatLocation = (location: string | undefined) => {
-    return location ? location.toUpperCase() : "";
+    return location ? location.toUpperCase() : '';
   };
 
   const currentDate = new Date();
@@ -63,9 +66,7 @@ const CalendarPage: FunctionComponent = () => {
       {events.length === 0 ? (
         <div className={styles.emptyState}>
           <ImpactText>Ingen kommende begivenheder</ImpactText>
-          <p className={styles.emptyStateText}>
-            Der er i øjeblikket ingen begivenheder planlagt.
-          </p>
+          <p className={styles.emptyStateText}>Der er i øjeblikket ingen begivenheder planlagt.</p>
         </div>
       ) : (
         sortedYears.map((year) => (
@@ -76,29 +77,15 @@ const CalendarPage: FunctionComponent = () => {
 
             <div className={styles.eventsGrid}>
               {eventsByYear[year]
-                .sort(
-                  (a, b) =>
-                    new Date(a.startDate).getTime() -
-                    new Date(b.startDate).getTime()
-                )
+                .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
                 .map((event, index) => {
                   const isFutureEvent = new Date(event.startDate) > currentDate;
                   return (
-                    <Card
-                      key={index}
-                      variant={isFutureEvent ? "solid" : "outlined"}
-                    >
-                      <div
-                        className={styles.eventCard}
-                        onClick={() => handleEventClick(event)}
-                      >
+                    <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'}>
+                      <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
                         <div className={styles.eventHeader}>
-                          <div className={styles.eventDate}>
-                            {formatDate(new Date(event.startDate))}
-                          </div>
-                          <div className={styles.eventLocation}>
-                            {formatLocation(event.location)}
-                          </div>
+                          <div className={styles.eventDate}>{formatDate(new Date(event.startDate))}</div>
+                          <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
                         </div>
 
                         <div className={styles.eventTitle}>{event.title}</div>
@@ -117,14 +104,7 @@ const CalendarPage: FunctionComponent = () => {
         ))
       )}
 
-      {selectedEvent && (
-        <AddEventToCalendar
-          event={selectedEvent}
-          isOpen={showPopup}
-          onClose={handleClosePopup}
-          onConfirm={handleAddToCalendar}
-        />
-      )}
+      {selectedEvent && <AddEventToCalendar event={selectedEvent} isOpen={showPopup} onClose={handleClosePopup} onConfirm={handleAddToCalendar} />}
     </div>
   );
 };

@@ -4,7 +4,10 @@
   padding: 1.5rem;
   border: 2px solid transparent;
 
-  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border 0.3s;
 
   &:hover {
     background-color: var(--color-background);

@@ -1,11 +1,11 @@
-import type { FunctionComponent } from "react";
+import type { FunctionComponent } from 'react';
 
 /*
     Redirect to the admin interface located at /_/
 */
 
 const AdminPage: FunctionComponent = () => {
-  window.location.href = "/_/";
+  window.location.href = '/_/';
   return <></>;
 };
 

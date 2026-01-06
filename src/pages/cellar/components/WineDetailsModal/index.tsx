@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import type { Wine } from "../../../../models/wines";
-import styles from "./index.module.scss";
+import type { FunctionComponent } from 'react';
+import type { Wine } from '../../../../models/wines';
+import styles from './index.module.scss';
 
 interface WineDetailsModalProps {
   wine: Wine;
@@ -8,26 +8,22 @@ interface WineDetailsModalProps {
   onClose: () => void;
 }
 
-const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({
-  wine,
-  isOpen,
-  onClose,
-}) => {
+const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({ wine, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("da-DK", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('da-DK', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("da-DK", {
-      style: "currency",
-      currency: "DKK",
+    return new Intl.NumberFormat('da-DK', {
+      style: 'currency',
+      currency: 'DKK',
     }).format(price);
   };
 
@@ -38,8 +34,7 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({
   };
 
   const consumedQuantity = wine.quantity - (wine.remaining || 0);
-  const consumedPercentage =
-    wine.quantity > 0 ? (consumedQuantity / wine.quantity) * 100 : 0;
+  const consumedPercentage = wine.quantity > 0 ? (consumedQuantity / wine.quantity) * 100 : 0;
 
   return (
     <div className={styles.overlay} onClick={handleBackdropClick}>
@@ -61,13 +56,7 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({
             <div className={styles.wineDetails}>
               <div className={styles.detail}>
                 <span className={styles.label}>Type:</span>
-                <span
-                  className={`${styles.kindBadge} ${
-                    styles[wine.kind.toLowerCase()]
-                  }`}
-                >
-                  {wine.kind}
-                </span>
+                <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
               </div>
 
               <div className={styles.detail}>
@@ -115,13 +104,7 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({
 
               <div className={styles.quantityRow}>
                 <span className={styles.label}>Tilbage:</span>
-                <span
-                  className={`${styles.value} ${
-                    wine.remaining === 0 ? styles.empty : ""
-                  }`}
-                >
-                  {wine.remaining !== undefined ? wine.remaining : "-"}
-                </span>
+                <span className={`${styles.value} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining !== undefined ? wine.remaining : '-'}</span>
               </div>
 
               <div className={styles.quantityRow}>
@@ -133,19 +116,14 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({
             {wine.quantity > 0 && (
               <div className={styles.progressContainer}>
                 <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressFill}
-                    style={{ width: `${consumedPercentage}%` }}
-                  />
+                  <div className={styles.progressFill} style={{ width: `${consumedPercentage}%` }} />
                 </div>
-                <span className={styles.progressText}>
-                  {consumedPercentage.toFixed(0)}% konsumeret
-                </span>
+                <span className={styles.progressText}>{consumedPercentage.toFixed(0)}% konsumeret</span>
               </div>
             )}
           </div>
 
-          {wine.notes && wine.notes.trim() !== "" && (
+          {wine.notes && wine.notes.trim() !== '' && (
             <div className={styles.notesSection}>
               <h3>Noter</h3>
               <p className={styles.notes}>{wine.notes}</p>
