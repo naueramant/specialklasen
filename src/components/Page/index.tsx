@@ -22,6 +22,7 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
         <nav>
           <NavLink to="/cellar">Kælderen</NavLink>
           <NavLink to="/calendar">Kalender</NavLink>
+          <NavLink to="/albums">Albums</NavLink>
           <NavLink to="/articles-of-association">Vedtægter</NavLink>
 
           {isAdmin && (

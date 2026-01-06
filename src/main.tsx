@@ -10,6 +10,8 @@ import ArticleOfAssociationPage from './pages/articleOfAssociation';
 import CalendarPage from './pages/calendar';
 import CellarPage from './pages/cellar';
 import { queryClient } from './services/api/client';
+import AlbumsPage from './pages/albums';
+import AlbumDetailsPage from './pages/albums/AlbumDetails';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -23,6 +25,8 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/cellar" element={<CellarPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/articles-of-association" element={<ArticleOfAssociationPage />} />
+            <Route path="/albums" element={<AlbumsPage />} />
+            <Route path="/albums/:id" element={<AlbumDetailsPage />} />
             <Route path="/admin" element={<AdminPage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
