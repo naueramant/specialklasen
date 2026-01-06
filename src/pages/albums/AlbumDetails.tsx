@@ -29,7 +29,7 @@ const AlbumDetailsPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <ImpactText>{album.title}</ImpactText>
-        <div className={styles.date}>{new Date(album.date).toLocaleDateString()}</div>
+        <div className={styles.date}>{new Date(album.date).toLocaleDateString('da-DK', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
       </div>
 
       <Card>
