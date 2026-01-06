@@ -1,6 +1,6 @@
 export interface Album {
-    id: string;
-    title: string;
-    images: string[];
-    date: string;
+  id: string;
+  title: string;
+  images: string[];
+  date: string;
 }
