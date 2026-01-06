@@ -1,5 +1,5 @@
-import type { FunctionComponent } from "react";
-import styles from "./index.module.scss";
+import type { FunctionComponent } from 'react';
+import styles from './index.module.scss';
 
 interface ImpactTextProps {
   children: React.ReactNode;

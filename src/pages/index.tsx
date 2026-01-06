@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import Card from "../components/Card";
-import { BodyText, ImpactText } from "../components/Text";
+import type { FunctionComponent } from 'react';
+import Card from '../components/Card';
+import { BodyText, ImpactText } from '../components/Text';
 
 const IndexPage: FunctionComponent = () => {
   return (
@@ -8,11 +8,8 @@ const IndexPage: FunctionComponent = () => {
       <ImpactText>Hvad fanden er det her?</ImpactText>
 
       <BodyText>
-        Specialklasen TM blev grundlagt i 2023 med missionen at fejre møder,
-        drikke vin og tale om hvor fattig verden er. Vi tror på, at det at være
-        anderledes er det, der gør os specielle, og vi er dedikerede til at
-        fremvise de mest ekstraordinære individer og begivenheder, der udfordrer
-        konventionelle normer.
+        Specialklasen TM blev grundlagt i 2023 med missionen at fejre møder, drikke vin og tale om hvor fattig verden er. Vi tror på, at det at være anderledes er det, der gør os
+        specielle, og vi er dedikerede til at fremvise de mest ekstraordinære individer og begivenheder, der udfordrer konventionelle normer.
       </BodyText>
 
       <br />
@@ -20,17 +17,15 @@ const IndexPage: FunctionComponent = () => {
       <ImpactText>Mød medlemmerne</ImpactText>
 
       <BodyText>
-        Vi består af en række unikke individer, der hver bringer deres egne
-        specielle talenter og perspektiver til gruppen. Fra journalister,
-        musikere, innovatører og tænkere. De fleste af dem er bare her for
-        vinen.
+        Vi består af en række unikke individer, der hver bringer deres egne specielle talenter og perspektiver til gruppen. Fra journalister, musikere, innovatører og tænkere. De
+        fleste af dem er bare her for vinen.
       </BodyText>
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "1rem",
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '1rem',
         }}
       >
         <Card>
@@ -74,20 +69,20 @@ const Image: FunctionComponent<ImageProps> = ({ src, zoom, top, left }) => {
   return (
     <div
       style={{
-        width: "100%",
-        height: "200px",
-        overflow: "hidden",
-        position: "relative",
+        width: '100%',
+        height: '200px',
+        overflow: 'hidden',
+        position: 'relative',
       }}
     >
       <img
         src={src}
         style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
           transform: `scale(${zoom || 1})`,
-          position: "absolute",
+          position: 'absolute',
           top: `${top || 0}px`,
           left: `${left || 0}px`,
         }}

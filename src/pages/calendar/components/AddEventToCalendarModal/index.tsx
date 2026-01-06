@@ -1,6 +1,6 @@
-import type { FunctionComponent } from "react";
-import type { Event } from "../../../../models/event";
-import styles from "./index.module.scss";
+import type { FunctionComponent } from 'react';
+import type { Event } from '../../../../models/event';
+import styles from './index.module.scss';
 
 interface AddEventToCalendarProps {
   event: Event;
@@ -9,29 +9,24 @@ interface AddEventToCalendarProps {
   onConfirm: () => void;
 }
 
-const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({
-  event,
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
+const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({ event, isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("da-DK", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('da-DK', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString("da-DK", {
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleTimeString('da-DK', {
+      hour: '2-digit',
+      minute: '2-digit',
       hour12: false,
     });
   };
@@ -79,9 +74,7 @@ const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({
             </div>
           </div>
 
-          <p className={styles.question}>
-            Vil du tilføje denne begivenhed til din kalender?
-          </p>
+          <p className={styles.question}>Vil du tilføje denne begivenhed til din kalender?</p>
 
           <div className={styles.actions}>
             <button className={styles.cancelButton} onClick={onClose}>

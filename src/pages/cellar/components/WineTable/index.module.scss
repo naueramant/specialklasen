@@ -82,7 +82,7 @@
 
 .clickableRow {
   cursor: pointer;
-  
+
   &:hover {
     background-color: rgba(148, 60, 30, 0.15) !important;
   }
@@ -194,7 +194,9 @@
   border: 2px solid var(--color-primary);
   border-radius: var(--border-radius);
   padding: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-2px);
@@ -204,7 +206,7 @@
 
 .clickableCard {
   cursor: pointer;
-  
+
   &:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px rgba(148, 60, 30, 0.3) !important;

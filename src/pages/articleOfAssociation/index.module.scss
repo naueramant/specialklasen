@@ -17,14 +17,14 @@
 
 .section {
   margin-bottom: 2.5rem;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
 }
 
 .sectionTitle {
-  font-family: "Anton", sans-serif;
+  font-family: 'Anton', sans-serif;
   font-size: 1.5rem;
   color: var(--color-primary);
   text-transform: uppercase;
@@ -39,7 +39,7 @@
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -57,12 +57,12 @@
 .agenda {
   margin: 1rem 0;
   padding-left: 2rem;
-  
+
   li {
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
     line-height: 1.5;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -112,20 +112,20 @@
   .container {
     padding: 0 0.5rem;
   }
-  
+
   .sectionTitle {
     font-size: 1.25rem;
   }
-  
+
   .subsection {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .subsectionTitle {
     min-width: auto;
   }
-  
+
   .agenda {
     padding-left: 1.5rem;
   }
@@ -135,15 +135,15 @@
   .header {
     margin-bottom: 2rem;
   }
-  
+
   .section {
     margin-bottom: 2rem;
   }
-  
+
   .sectionTitle {
     font-size: 1.1rem;
   }
-  
+
   .footer {
     margin-top: 3rem;
   }

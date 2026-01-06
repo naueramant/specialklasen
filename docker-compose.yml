@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
     command: --automigrate=0
     ports:
-      - "8090:8090"
+      - '8090:8090'
     volumes:
       - pocketbase_data:/pb_data
       - ./migrations:/pb_migrations
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8090/api/health']
       interval: 5s
       timeout: 5s
       retries: 5
