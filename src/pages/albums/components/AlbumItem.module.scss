@@ -1,24 +1,80 @@
-.albumCard {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    
-    max-height: 225px;
-    
-
-    &:hover {
-      transform: translateY(-2px);
-    }
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.seeMore {
-    background-color: var(--color-grey);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1 1 calc(20% - 10px);
-    max-width: calc(20% - 10px);
-    box-sizing: border-box;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: var(--color-grey-dark);
+}
+
+.albumCard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  max-height: 340px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* prevent children from overflowing the card */
+}
+
+.imageWrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--border-radius) / 1.5);
+  height: 0;
+  padding-bottom: 100%; /* square */
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+/* Hover zoom intentionally removed from album list; zoom lives on details page */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+}
+
+.overlayCount {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.overlayText {
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }

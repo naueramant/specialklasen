@@ -5,14 +5,17 @@ import type { RecordModel } from 'pocketbase';
 import styles from './index.module.scss';
 
 interface PocketbaseImageProps {
-   album: Album;
-    imageName: string;
+  album: Album;
+  imageName: string;
+  className?: string;
 }
 
-const PocketbaseImage: React.FC<PocketbaseImageProps> = ({ album, imageName }) => {
-    const url = pb.files.getURL(album as unknown as RecordModel, imageName);
+const PocketbaseImage: React.FC<PocketbaseImageProps> = ({ album, imageName, className }) => {
+  const url = pb.files.getURL(album as unknown as RecordModel, imageName);
 
-    return <img src={url} alt="Image" className={styles.responsiveImage} />;
+  const imgClass = className ? className : styles.responsiveImage;
+
+  return <img src={url} alt="Image" className={imgClass} />;
 };
 
 export default PocketbaseImage;
