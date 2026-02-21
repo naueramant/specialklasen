@@ -1,12 +1,13 @@
-.albumItem {
+.albumList {
+  padding: 16px;
+  margin: 0;
   list-style: none;
-  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-ul {
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+.albumItem {
+  list-style: none;
+  margin-bottom: 32px;
 }
