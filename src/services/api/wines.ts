@@ -6,8 +6,8 @@ export const useWines = () => {
   return useQuery({
     queryKey: ['wines'],
     queryFn: async () => {
-      const result = await pb.collection('wines').getList();
-      return result.items as unknown as Wine[];
+      const items = await pb.collection('wines').getFullList({ sort: '-created' });
+      return items as unknown as Wine[];
     },
   });
 };

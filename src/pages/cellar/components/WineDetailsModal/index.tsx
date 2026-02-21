@@ -76,7 +76,12 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({ wine, isOp
 
               <div className={styles.detail}>
                 <span className={styles.label}>Placering:</span>
-                <span className={styles.value}>{wine.location}</span>
+                <span className={styles.value}>{wine.location ?? '-'}</span>
+              </div>
+
+              <div className={styles.detail}>
+                <span className={styles.label}>Ejer:</span>
+                <span className={styles.value}>{wine.owner && wine.owner.trim() !== '' ? wine.owner : 'Fælles'}</span>
               </div>
 
               <div className={styles.detail}>
