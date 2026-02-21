@@ -1113,7 +1113,7 @@ migrate((app) => {
           "hidden": false,
           "id": "file3760176746",
           "maxSelect": 99,
-          "maxSize": 0,
+          "maxSize": 100000000,
           "mimeTypes": [],
           "name": "images",
           "presentable": false,
