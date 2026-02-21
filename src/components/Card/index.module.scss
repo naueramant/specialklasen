@@ -25,3 +25,15 @@
     }
   }
 }
+
+.noHover:hover {
+  background-color: var(--color-primary);
+  border: 2px solid transparent;
+  color: inherit;
+}
+
+.noHover.outlined:hover {
+  background-color: transparent;
+  border: 2px solid var(--color-primary);
+  color: inherit;
+}

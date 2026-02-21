@@ -77,10 +77,10 @@ const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({ event,
           <p className={styles.question}>Vil du tilføje denne begivenhed til din kalender?</p>
 
           <div className={styles.actions}>
-            <button className={styles.cancelButton} onClick={onClose}>
+            <button type="button" className={styles.cancelButton} onClick={onClose}>
               Annuller
             </button>
-            <button className={styles.confirmButton} onClick={onConfirm} disabled={!event.startDate}>
+            <button type="button" className={styles.confirmButton} onClick={onConfirm} disabled={!event.startDate}>
               Tilføj til kalender
             </button>
           </div>

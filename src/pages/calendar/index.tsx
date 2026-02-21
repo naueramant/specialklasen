@@ -1,4 +1,5 @@
 import { useState, type FunctionComponent } from 'react';
+import { useNavigate } from 'react-router';
 import Card from '../../components/Card';
 import { ImpactText } from '../../components/Text';
 import type { Event } from '../../models/event';
@@ -9,6 +10,7 @@ import styles from './index.module.scss';
 
 const CalendarPage: FunctionComponent = () => {
   const { data: events = [] } = useEvents();
+  const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -47,9 +49,14 @@ const CalendarPage: FunctionComponent = () => {
 
   const currentDate = new Date();
 
-  const handleEventClick = (event: Event) => {
+  const handleAddToCalendarClick = (event: Event) => {
     setSelectedEvent(event);
     setShowPopup(true);
+  };
+
+  const handleViewAlbumClick = (event: Event) => {
+    if (!event.album) return;
+    navigate(`/albums/${event.album}`);
   };
 
   const handleClosePopup = () => {
@@ -82,8 +89,8 @@ const CalendarPage: FunctionComponent = () => {
 
               <div className={styles.eventsGrid}>
                 {tbaEvents.map((event, index) => (
-                  <Card key={index} variant="solid">
-                    <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
+                  <Card key={index} variant="solid" hover={false}>
+                    <div className={styles.eventCard}>
                       <div className={styles.eventHeader}>
                         <div className={styles.eventDate}>TBA</div>
                         <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
@@ -96,6 +103,32 @@ const CalendarPage: FunctionComponent = () => {
                           __html: event.description,
                         }}
                       />
+
+                      <div className={styles.eventActions}>
+                        {event.album && (
+                          <button
+                            type="button"
+                            className={styles.albumButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewAlbumClick(event);
+                            }}
+                          >
+                            Se billeder
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className={styles.calendarButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCalendarClick(event);
+                          }}
+                          disabled={!event.startDate}
+                        >
+                          Tilføj til kalender
+                        </button>
+                      </div>
                     </div>
                   </Card>
                 ))}
@@ -115,8 +148,8 @@ const CalendarPage: FunctionComponent = () => {
                   .map((event, index) => {
                     const isFutureEvent = new Date(event.startDate) > currentDate;
                     return (
-                      <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'}>
-                        <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
+                      <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'} hover={false}>
+                        <div className={styles.eventCard}>
                           <div className={styles.eventHeader}>
                             <div className={styles.eventDate}>{formatDate(new Date(event.startDate))}</div>
                             <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
@@ -129,6 +162,32 @@ const CalendarPage: FunctionComponent = () => {
                               __html: event.description,
                             }}
                           />
+
+                          <div className={styles.eventActions}>
+                            {event.album && (
+                              <button
+                                type="button"
+                                className={styles.albumButton}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewAlbumClick(event);
+                                }}
+                              >
+                                Se billeder
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              className={styles.calendarButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCalendarClick(event);
+                              }}
+                              disabled={!event.startDate}
+                            >
+                              Tilføj til kalender
+                            </button>
+                          </div>
                         </div>
                       </Card>
                     );
