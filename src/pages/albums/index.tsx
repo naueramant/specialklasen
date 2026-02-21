@@ -16,9 +16,9 @@ const AlbumsPage: React.FC = () => {
   return (
     <div>
       {albums && (
-        <ul>
+        <ul className={styles.albumList}>
           {albums.map((album, index) => (
-            <li key={index} className={styles.albumItem}>
+            <li key={album.id ?? index} className={styles.albumItem}>
               <AlbumItem album={album} />
             </li>
           ))}
