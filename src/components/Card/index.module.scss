@@ -26,6 +26,10 @@
   }
 }
 
+.noPadding {
+  padding: 0;
+}
+
 .noHover:hover {
   background-color: var(--color-primary);
   border: 2px solid transparent;
