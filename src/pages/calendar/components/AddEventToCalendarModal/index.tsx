@@ -80,7 +80,7 @@ const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({ event,
             <button className={styles.cancelButton} onClick={onClose}>
               Annuller
             </button>
-            <button className={styles.confirmButton} onClick={onConfirm}>
+            <button className={styles.confirmButton} onClick={onConfirm} disabled={!event.startDate}>
               Tilføj til kalender
             </button>
           </div>

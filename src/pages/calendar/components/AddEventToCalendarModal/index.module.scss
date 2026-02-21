@@ -143,6 +143,13 @@
     background: transparent;
     color: var(--color-text);
   }
+
+  &:disabled {
+    background: var(--color-primary);
+    color: var(--color-background);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 @media (max-width: 600px) {

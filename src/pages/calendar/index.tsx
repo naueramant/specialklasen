@@ -12,8 +12,12 @@ const CalendarPage: FunctionComponent = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  // Group events by year
-  const eventsByYear = events.reduce(
+  // Separate TBA events (no start date) from dated events
+  const tbaEvents = events.filter((event) => !event.startDate);
+  const datedEvents = events.filter((event) => !!event.startDate);
+
+  // Group dated events by year
+  const eventsByYear = datedEvents.reduce(
     (acc, event) => {
       const year = new Date(event.startDate).getFullYear();
       if (!acc[year]) {
@@ -69,39 +73,70 @@ const CalendarPage: FunctionComponent = () => {
           <p className={styles.emptyStateText}>Der er i øjeblikket ingen begivenheder planlagt.</p>
         </div>
       ) : (
-        sortedYears.map((year) => (
-          <div key={year} className={styles.yearSection}>
-            <div className={styles.yearHeader}>
-              <ImpactText>{year}</ImpactText>
-            </div>
+        <>
+          {tbaEvents.length > 0 && (
+            <div className={styles.yearSection}>
+              <div className={styles.yearHeader}>
+                <ImpactText>TBA</ImpactText>
+              </div>
 
-            <div className={styles.eventsGrid}>
-              {eventsByYear[year]
-                .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-                .map((event, index) => {
-                  const isFutureEvent = new Date(event.startDate) > currentDate;
-                  return (
-                    <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'}>
-                      <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
-                        <div className={styles.eventHeader}>
-                          <div className={styles.eventDate}>{formatDate(new Date(event.startDate))}</div>
-                          <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
-                        </div>
-
-                        <div className={styles.eventTitle}>{event.title}</div>
-
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: event.description,
-                          }}
-                        />
+              <div className={styles.eventsGrid}>
+                {tbaEvents.map((event, index) => (
+                  <Card key={index} variant="solid">
+                    <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
+                      <div className={styles.eventHeader}>
+                        <div className={styles.eventDate}>TBA</div>
+                        <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
                       </div>
-                    </Card>
-                  );
-                })}
+
+                      <div className={styles.eventTitle}>{event.title}</div>
+
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: event.description,
+                        }}
+                      />
+                    </div>
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
-        ))
+          )}
+
+          {sortedYears.map((year) => (
+            <div key={year} className={styles.yearSection}>
+              <div className={styles.yearHeader}>
+                <ImpactText>{year}</ImpactText>
+              </div>
+
+              <div className={styles.eventsGrid}>
+                {eventsByYear[year]
+                  .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+                  .map((event, index) => {
+                    const isFutureEvent = new Date(event.startDate) > currentDate;
+                    return (
+                      <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'}>
+                        <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
+                          <div className={styles.eventHeader}>
+                            <div className={styles.eventDate}>{formatDate(new Date(event.startDate))}</div>
+                            <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
+                          </div>
+
+                          <div className={styles.eventTitle}>{event.title}</div>
+
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: event.description,
+                            }}
+                          />
+                        </div>
+                      </Card>
+                    );
+                  })}
+              </div>
+            </div>
+          ))}
+        </>
       )}
 
       {selectedEvent && <AddEventToCalendar event={selectedEvent} isOpen={showPopup} onClose={handleClosePopup} onConfirm={handleAddToCalendar} />}
