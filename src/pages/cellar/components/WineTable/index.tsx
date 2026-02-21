@@ -30,7 +30,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         wine.region.toLowerCase().includes(searchLower) ||
         wine.grape.toLowerCase().includes(searchLower) ||
         wine.kind.toLowerCase().includes(searchLower) ||
-        wine.location.toLowerCase().includes(searchLower) ||
+        (wine.location ?? '').toLowerCase().includes(searchLower) ||
         new Date(wine.bought).toLocaleDateString().toLowerCase().includes(searchLower) ||
         wine.year.toString().includes(searchLower)
       );
@@ -169,7 +169,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
                 <td>
                   <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
                 </td>
-                <td>{wine.location}</td>
+                <td>{wine.location ?? '-'}</td>
                 <td>{new Date(wine.bought).toLocaleDateString()}</td>
                 <td>{wine.quantity}</td>
                 <td>{wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : '-'}</td>
@@ -218,7 +218,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
               <div className={styles.cardRow}>
                 <span className={styles.cardLabel}>Placering:</span>
-                <span>{wine.location}</span>
+                <span>{wine.location ?? '-'}</span>
               </div>
 
               <div className={styles.cardRow}>

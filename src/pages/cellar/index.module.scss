@@ -8,6 +8,114 @@
   min-height: 400px;
 }
 
+.filterRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ownerPickerButton {
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  background: var(--color-secondary);
+  color: var(--color-text);
+  font-family: inherit;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-text);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 2px rgba(238, 227, 210, 0.2);
+  }
+}
+
+.ownerPickerOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 6rem 2rem 2rem;
+}
+
+.ownerPickerPanel {
+  width: min(360px, 100%);
+  background: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.ownerPickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-bottom: 2px solid var(--color-primary);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ownerPickerClose {
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ownerPickerList {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem 1rem;
+  gap: 0.75rem;
+}
+
+.ownerPickerItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+}
+
+.ownerSections {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.ownerHeader {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
 .emptyStateText {
   margin-top: 1rem;
   font-size: 1.1rem;
