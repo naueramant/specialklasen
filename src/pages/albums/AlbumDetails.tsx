@@ -6,6 +6,13 @@ import PocketbaseImage from '../../components/PocketbaseImage';
 import ImageLightbox from '../../components/ImageLightbox';
 import styles from './AlbumDetails.module.scss';
 import { ImpactText } from '../../components/Text';
+import PocketbaseVideo from '../../components/PocketbaseVideo';
+import type { LightboxMediaItem } from '../../components/ImageLightbox';
+
+const isVideoFile = (fileName: string) => {
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  return ext === 'mp4' || ext === 'webm' || ext === 'ogg' || ext === 'mov' || ext === 'm4v';
+};
 
 const AlbumDetailsPage: React.FC = () => {
   const { id } = useParams();
@@ -25,6 +32,9 @@ const AlbumDetailsPage: React.FC = () => {
   }
   if (!album) return <div>Album not found</div>;
 
+  const media = album.images ?? [];
+  const mediaItems: LightboxMediaItem[] = media.map((name) => ({ type: isVideoFile(name) ? ('video' as const) : ('image' as const), name }));
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -34,30 +44,41 @@ const AlbumDetailsPage: React.FC = () => {
 
       <Card>
         <div className={styles.gallery}>
-          {album.images.map((img, i) => (
-            <div key={i} className={styles.imageWrap}>
+          {mediaItems.map((item, i) => (
+            <div key={`${item.type}:${item.name}:${i}`} className={styles.imageWrap}>
               <button
+                type="button"
                 className={styles.thumbButton}
                 onClick={() => {
                   setSelected(i);
                   setOpen(true);
                 }}
-                aria-label={`Open image ${i + 1} of ${album.images.length}`}
+                aria-label={`Open ${item.type} ${i + 1} of ${mediaItems.length}`}
               >
-                <PocketbaseImage album={album} imageName={img} className={styles.cover} />
+                {item.type === 'image' ? (
+                  <PocketbaseImage album={album} imageName={item.name} className={styles.cover} />
+                ) : (
+                  <>
+                    <PocketbaseVideo album={album} fileName={item.name} className={styles.videoThumb} controls={false} muted />
+                    <div className={styles.videoBadge} aria-hidden>
+                      VIDEO
+                    </div>
+                  </>
+                )}
               </button>
             </div>
           ))}
         </div>
       </Card>
 
-      {open && selected !== null && (
+      {open && selected !== null && mediaItems.length > 0 && (
         <ImageLightbox
           album={album}
+          items={mediaItems}
           index={selected}
           onClose={() => setOpen(false)}
-          onPrev={() => setSelected((s) => (s === null ? 0 : (s - 1 + album.images.length) % album.images.length))}
-          onNext={() => setSelected((s) => (s === null ? 0 : (s + 1) % album.images.length))}
+          onPrev={() => setSelected((s) => (s === null ? 0 : (s - 1 + mediaItems.length) % mediaItems.length))}
+          onNext={() => setSelected((s) => (s === null ? 0 : (s + 1) % mediaItems.length))}
         />
       )}
     </div>

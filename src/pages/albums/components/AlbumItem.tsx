@@ -5,6 +5,12 @@ import PocketbaseImage from '../../../components/PocketbaseImage';
 import Card from '../../../components/Card';
 import type { Album } from '../../../models/albums';
 import { ImpactText } from '../../../components/Text';
+import PocketbaseVideo from '../../../components/PocketbaseVideo';
+
+const isVideoFile = (fileName: string) => {
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  return ext === 'mp4' || ext === 'webm' || ext === 'ogg' || ext === 'mov' || ext === 'm4v';
+};
 
 export interface AlbumItemProps {
   album: Album;
@@ -37,7 +43,16 @@ export const AlbumItem: React.FC<AlbumItemProps> = ({ album }) => {
 
               return (
                 <div key={i} className={styles.imageWrap}>
-                  <PocketbaseImage album={album} imageName={image} className={styles.cover} />
+                  {isVideoFile(image) ? (
+                    <>
+                      <PocketbaseVideo album={album} fileName={image} className={styles.videoCover} controls={false} muted />
+                      <div className={styles.videoBadge} aria-hidden>
+                        VIDEO
+                      </div>
+                    </>
+                  ) : (
+                    <PocketbaseImage album={album} imageName={image} className={styles.cover} />
+                  )}
 
                   {isLast && hiddenCount > 0 && (
                     <div className={styles.overlay}>
