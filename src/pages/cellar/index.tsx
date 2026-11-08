@@ -45,7 +45,7 @@ const CellarPage: FunctionComponent = () => {
         </p>
       </PageIntro>
 
-      <LedgerSection title="Hvem ejer hvad">
+      <LedgerSection title="Hvem har hvad">
         <Holders wines={wines} selected={owners} onToggle={toggleOwner} />
       </LedgerSection>
 
