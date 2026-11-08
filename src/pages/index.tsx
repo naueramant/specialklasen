@@ -2,23 +2,16 @@ import type { FunctionComponent } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import { Link } from 'react-router';
 import Card from '../components/Card';
+import MemberPhoto from '../components/MemberPhoto';
 import LedgerSection from '../components/LedgerSection';
 import PageIntro from '../components/PageIntro';
 import { BodyText } from '../components/Text';
+import { MEMBERS } from '../data/members';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useEvents } from '../services/api/events';
 import type { Event } from '../models/event';
 import { formatDate, parseDate, stripClubPrefix } from '../utils/format';
 import styles from './index.module.scss';
-
-const MEMBERS: { name: string; quote: string; image: ImageProps }[] = [
-  { name: 'Jeppe Bo Kibsgaard', quote: 'Jeg er her bare for vinen 🍷', image: { src: '/images/members/1.jpg' } },
-  { name: 'Mads Sejer', quote: 'Fuck det er fattigt 💸', image: { src: '/images/members/2.jpg' } },
-  { name: 'Jonas Tranberg', quote: 'Om vi kan!', image: { src: '/images/members/3.jpg' } },
-  { name: 'Jacob Winther', quote: 'Vil du med hjem og se mit vinkøleskab? 🍆', image: { src: '/images/members/4.jpg' } },
-  // this photo is framed wider than the others, so zoom in on the face
-  { name: 'Peter Ring', quote: 'Wauw, det fortov ser blødt ud! ⭐⭐⭐⭐⭐', image: { src: '/images/members/5.jpg', zoom: 1.5, top: -50, left: -50 } },
-];
 
 // The next planned evening on the calendar; hidden when nothing is dated
 const NextEvent: FunctionComponent = () => {
@@ -66,7 +59,7 @@ const IndexPage: FunctionComponent = () => {
           {MEMBERS.map((member) => (
             <li key={member.name}>
               <Card className={styles.memberCard}>
-                <Image {...member.image} alt={member.name} />
+                <MemberPhoto image={member.image} alt={member.name} className={styles.imageFrame} />
                 <div className={styles.memberBody}>
                   <blockquote className={styles.quote}>»{member.quote}«</blockquote>
                   <h3 className={styles.memberName}>{member.name}</h3>
@@ -77,31 +70,6 @@ const IndexPage: FunctionComponent = () => {
         </ul>
       </LedgerSection>
     </>
-  );
-};
-
-interface ImageProps {
-  src: string;
-  alt?: string;
-  zoom?: number;
-  top?: number;
-  left?: number;
-}
-
-const Image: FunctionComponent<ImageProps> = ({ src, alt = '', zoom, top, left }) => {
-  return (
-    <div className={styles.imageFrame}>
-      <img
-        src={src}
-        alt={alt}
-        className={styles.image}
-        style={{
-          transform: `scale(${zoom || 1})`,
-          top: `${top || 0}px`,
-          left: `${left || 0}px`,
-        }}
-      />
-    </div>
   );
 };
 

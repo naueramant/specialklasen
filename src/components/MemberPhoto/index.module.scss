@@ -1,0 +1,14 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

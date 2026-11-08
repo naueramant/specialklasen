@@ -1,42 +1,239 @@
-.posts {
+// The sitting board: five equal seats in a row, the chair first and on rust
+.seats {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1rem;
 
-  // keep every card in a row the same height
-  > li {
-    display: flex;
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 
-    > * {
-      flex: 1;
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.seat {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--color-primary);
+
+  // the chair's label is set on rust, like a solid card elsewhere on the site
+  &.lead .label {
+    flex: 1;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+
+    .vintage,
+    .nickname,
+    .member {
+      color: var(--color-on-primary);
+    }
+  }
+
+  // on two columns the chair gets the first row to itself, kept short
+  @media (max-width: 600px) {
+    &.lead {
+      grid-column: 1 / -1;
+
+      .seatPhoto {
+        aspect-ratio: 2 / 1;
+      }
     }
   }
 }
 
-.post {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.seatPhoto {
+  aspect-ratio: 4 / 3;
 }
 
-.postName {
+.label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.25rem 1rem 1.5rem;
+  border-top: 2px solid var(--color-primary);
+  text-align: center;
+}
+
+.vintage {
   font-family: 'Anton', sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
+  color: var(--color-primary-text);
+}
+
+.nickname {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  color: var(--color-text);
 }
 
 .member {
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
-.title {
-  margin-top: auto;
-  font-size: 1rem;
-  font-style: italic;
+// Gennem årene: one row per year, a fixed column per post
+.history {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 2px solid var(--color-primary);
+
+  th,
+  td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(148, 60, 30, 0.35);
+  }
+
+  thead th {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  th:first-child {
+    width: 5.5rem;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: none;
+  }
+}
+
+// the sitting board's year stands out from the history below it
+.current {
+  background-color: rgba(148, 60, 30, 0.25);
+
+  .year {
+    color: var(--color-primary-text);
+  }
+
+  .holderName {
+    color: var(--color-text);
+  }
+}
+
+.year {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+.holder {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+}
+
+.holderText {
+  min-width: 0;
+}
+
+// the nickname leads; who held it sits underneath
+.holderTitle {
+  display: block;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.holderName {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.empty {
+  color: var(--color-text-muted);
+}
+
+// on narrow screens each year becomes a block with one line per post
+@media (max-width: 760px) {
+  .history {
+    border: none;
+
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    tbody,
+    tr,
+    th,
+    td {
+      display: block;
+    }
+
+    tr {
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--color-primary);
+    }
+
+    th:first-child {
+      width: auto;
+      padding: 0.5rem 1rem;
+    }
+
+    td {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+
+      // the post name, since the column headers are hidden here
+      &::before {
+        content: attr(data-label);
+        flex: 0 0 6.5rem;
+        font-family: 'Anton', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+    }
+
+    tbody tr:last-child > * {
+      border-bottom: 1px solid rgba(148, 60, 30, 0.35);
+    }
+
+    tr > :last-child {
+      border-bottom: none !important;
+    }
+  }
+
+  .year {
+    font-size: 1.5rem;
+  }
 }
