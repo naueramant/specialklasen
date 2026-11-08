@@ -1,0 +1,6 @@
+.glass {
+  display: block;
+  flex-shrink: 0;
+  // matches SWING_ROOM in index.tsx: room for the swing without widening the logo
+  margin-inline: -8px;
+}

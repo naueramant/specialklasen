@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { PiWineFill } from 'react-icons/pi';
 import { NavLink } from 'react-router';
 import { isLoggedInAsAdmin } from '../../services/admin/user';
+import WineGlass from '../WineGlass';
 import styles from './index.module.scss';
 
 interface PageProps {
@@ -16,7 +16,7 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
     <>
       <header className={styles.header}>
         <NavLink to="/" className={styles.logo}>
-          Specialklasen <PiWineFill aria-hidden />
+          Specialklasen <WineGlass />
         </NavLink>
 
         <nav aria-label="Hovedmenu">

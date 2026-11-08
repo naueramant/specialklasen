@@ -12,37 +12,14 @@
   margin: 0 auto;
 
   .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-size: 2rem;
     font-weight: bold;
     text-transform: uppercase;
     text-decoration: none;
     color: inherit;
-
-    svg {
-      transform: rotate(-20deg);
-
-      &:hover {
-        animation: swing 0.5s ease-in-out;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        &:hover {
-          animation: none;
-        }
-      }
-
-      @keyframes swing {
-        0% {
-          transform: rotate(-20deg);
-        }
-        50% {
-          transform: rotate(20deg);
-        }
-        100% {
-          transform: rotate(-20deg);
-        }
-      }
-    }
   }
 
   nav {
