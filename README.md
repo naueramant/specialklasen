@@ -33,6 +33,16 @@ Stop the development environment containers:
 make stop
 ```
 
+### Using the production API
+
+To run the local frontend against the live API at https://specialklasen.org (no Docker needed):
+
+```bash
+pnpm dev:prod
+```
+
+The Vite proxy target can also be set with the `API_TARGET` env var (in the shell or `.env.local`).
+
 View all available commands:
 
 ```bash
