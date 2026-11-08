@@ -6,8 +6,7 @@ export const useWines = () => {
   return useQuery({
     queryKey: ['wines'],
     queryFn: async () => {
-      // getFullList pages through every record; getList stops at the first 30
-      const items = await pb.collection('wines').getFullList();
+      const items = await pb.collection('wines').getFullList({ sort: '-created' });
       return items as unknown as Wine[];
     },
   });

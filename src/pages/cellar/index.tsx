@@ -4,6 +4,7 @@ import PageIntro from '../../components/PageIntro';
 import { ImpactText } from '../../components/Text';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useWines } from '../../services/api/wines';
+import { getOwner } from '../../utils/format';
 import Holders from './components/Holders';
 import WineTable from './components/WineTable';
 import styles from './index.module.scss';
@@ -11,7 +12,9 @@ import styles from './index.module.scss';
 const CellarPage: FunctionComponent = () => {
   useDocumentTitle('Kælderen');
   const { data: wines, isLoading, error } = useWines();
-  const [holder, setHolder] = useState<string | null>(null);
+  // empty selection shows the whole cellar
+  const [owners, setOwners] = useState<string[]>([]);
+  const toggleOwner = (owner: string) => setOwners((prev) => (prev.includes(owner) ? prev.filter((o) => o !== owner) : [...prev, owner]));
 
   const remainingWines = wines?.reduce((total, wine) => total + (wine.remaining ?? 0), 0);
 
@@ -42,12 +45,12 @@ const CellarPage: FunctionComponent = () => {
         </p>
       </PageIntro>
 
-      <LedgerSection title="Hvem har hvad">
-        <Holders wines={wines} selected={holder} onSelect={setHolder} />
+      <LedgerSection title="Hvem ejer hvad">
+        <Holders wines={wines} selected={owners} onToggle={toggleOwner} />
       </LedgerSection>
 
       <LedgerSection title="Hele kælderen" tally={wines.length === 1 ? '1 vin' : `${wines.length} vine`}>
-        <WineTable wines={wines} holder={holder} onClearHolder={() => setHolder(null)} />
+        <WineTable wines={owners.length ? wines.filter((wine) => owners.includes(getOwner(wine))) : wines} owners={owners} onClearOwners={() => setOwners([])} />
       </LedgerSection>
     </>
   );

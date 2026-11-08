@@ -33,6 +33,9 @@ export const formatWineKind = (kind: string | undefined) => {
   return WINE_KIND_LABELS[kind.toLowerCase()] ?? kind;
 };
 
+// Wines without an owner belong to the whole club
+export const getOwner = (wine: { owner?: string }) => (wine.owner && wine.owner.trim() !== '' ? wine.owner : 'Fælles');
+
 const VIDEO_EXTENSIONS = ['mp4', 'mov', 'webm', 'm4v'];
 
 export const isVideoFile = (fileName: string) => VIDEO_EXTENSIONS.includes(fileName.split('.').pop()?.toLowerCase() ?? '');

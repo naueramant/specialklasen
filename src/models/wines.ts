@@ -7,7 +7,8 @@ export interface Wine {
   grape: string;
   id: string;
   kind: string;
-  location: string;
+  owner?: string;
+  location?: string;
   name: string;
   notes: string;
   price: number;

@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 
 /*
-    Redirect to the admin interface located at /_/
+  Redirect to the PocketBase admin interface located at /_/
 */
 
 const AdminPage: FunctionComponent = () => {

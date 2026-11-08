@@ -3,15 +3,15 @@ import { useMemo, useState } from 'react';
 import { IoArrowDown, IoArrowUp, IoClose } from 'react-icons/io5';
 import WineKindBadge from '../../../../components/WineKindBadge';
 import type { Wine } from '../../../../models/wines';
-import { formatDate, formatVintage, formatWineKind } from '../../../../utils/format';
+import { formatDate, formatVintage, formatWineKind, getOwner } from '../../../../utils/format';
 import WineDetailsModal from '../WineDetailsModal/index';
 import styles from './index.module.scss';
 
 interface WineTableProps {
   wines?: Wine[];
-  // only show the bottles kept by this member
-  holder?: string | null;
-  onClearHolder?: () => void;
+  // owners the list is filtered to, shown with a way to clear the filter
+  owners?: string[];
+  onClearOwners?: () => void;
 }
 
 type SortField = keyof Wine;
@@ -24,6 +24,7 @@ const COLUMNS: { field: SortField; label: string }[] = [
   { field: 'region', label: 'Region' },
   { field: 'grape', label: 'Drue' },
   { field: 'kind', label: 'Type' },
+  { field: 'owner', label: 'Ejer' },
   { field: 'location', label: 'Placering' },
   { field: 'bought', label: 'Købt' },
   { field: 'quantity', label: 'Antal' },
@@ -35,7 +36,7 @@ const formatBought = (wine: Wine) => formatDate(wine.bought, { year: 'numeric', 
 const RemainingBadge: FunctionComponent<{ wine: Wine }> = ({ wine }) =>
   wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : <span>—</span>;
 
-const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHolder }) => {
+const WineTable: FunctionComponent<WineTableProps> = ({ wines, owners = [], onClearOwners }) => {
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,13 +45,21 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHo
   const filteredAndSortedWines = useMemo(() => {
     // First filter wines based on search term
     const filtered = wines?.filter((wine) => {
-      if (holder && (wine.location || 'Ukendt') !== holder) return false;
       if (!searchTerm) return true;
 
       const searchLower = searchTerm.toLowerCase();
-      return [wine.name, wine.country, wine.region, wine.grape, wine.kind, formatWineKind(wine.kind), wine.location, formatBought(wine), formatVintage(wine.year)].some((value) =>
-        value?.toLowerCase().includes(searchLower)
-      );
+      return [
+        wine.name,
+        wine.country,
+        wine.region,
+        wine.grape,
+        wine.kind,
+        formatWineKind(wine.kind),
+        wine.location,
+        getOwner(wine),
+        formatBought(wine),
+        formatVintage(wine.year),
+      ].some((value) => value?.toLowerCase().includes(searchLower));
     });
 
     // Then sort the filtered results; empty values always go last
@@ -74,7 +83,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHo
 
       return 0;
     });
-  }, [wines, sortField, sortDirection, searchTerm, holder]);
+  }, [wines, sortField, sortDirection, searchTerm]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -107,10 +116,10 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHo
         )}
       </div>
 
-      {holder && (
+      {owners.length > 0 && (
         <p className={styles.holderFilter}>
-          Viser kun flasker hos {holder}.{' '}
-          <button type="button" className={styles.linkButton} onClick={onClearHolder}>
+          Viser kun vine ejet af {new Intl.ListFormat('da', { type: 'conjunction' }).format(owners)}.{' '}
+          <button type="button" className={styles.linkButton} onClick={onClearOwners}>
             Vis hele kælderen
           </button>
         </p>
@@ -174,7 +183,8 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHo
                 <td>
                   <WineKindBadge kind={wine.kind} />
                 </td>
-                <td>{wine.location}</td>
+                <td>{getOwner(wine)}</td>
+                <td>{wine.location || '—'}</td>
                 <td className={styles.nowrap}>{formatBought(wine)}</td>
                 <td className={styles.number}>{wine.quantity}</td>
                 <td className={styles.number}>
@@ -223,8 +233,13 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHo
               </div>
 
               <div className={styles.cardRow}>
+                <dt className={styles.cardLabel}>Ejer</dt>
+                <dd>{getOwner(wine)}</dd>
+              </div>
+
+              <div className={styles.cardRow}>
                 <dt className={styles.cardLabel}>Placering</dt>
-                <dd>{wine.location}</dd>
+                <dd>{wine.location || '—'}</dd>
               </div>
 
               <div className={styles.cardRow}>

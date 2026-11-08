@@ -1,12 +1,12 @@
 import type { FunctionComponent } from 'react';
 import type { Wine } from '../../../../models/wines';
-import { formatWineKind } from '../../../../utils/format';
+import { formatWineKind, getOwner } from '../../../../utils/format';
 import styles from './index.module.scss';
 
 interface HoldersProps {
   wines: Wine[];
-  selected: string | null;
-  onSelect: (holder: string | null) => void;
+  selected: string[];
+  onToggle: (owner: string) => void;
 }
 
 interface Holder {
@@ -15,15 +15,15 @@ interface Holder {
   kinds: [string, number][];
 }
 
-// "Placering" is the member keeping the bottles, so group what is left by member
-const groupByHolder = (wines: Wine[]): Holder[] => {
+// Group the bottles that are left by the member who owns them
+const groupByOwner = (wines: Wine[]): Holder[] => {
   const holders = new Map<string, { bottles: number; kinds: Map<string, number> }>();
 
   wines.forEach((wine) => {
     const remaining = wine.remaining ?? 0;
     if (remaining === 0) return;
 
-    const name = wine.location || 'Ukendt';
+    const name = getOwner(wine);
     const holder = holders.get(name) ?? { bottles: 0, kinds: new Map() };
     holder.bottles += remaining;
     holder.kinds.set(wine.kind, (holder.kinds.get(wine.kind) ?? 0) + remaining);
@@ -35,24 +35,19 @@ const groupByHolder = (wines: Wine[]): Holder[] => {
     .sort((a, b) => b.bottles - a.bottles);
 };
 
-const Holders: FunctionComponent<HoldersProps> = ({ wines, selected, onSelect }) => {
-  const holders = groupByHolder(wines);
+const Holders: FunctionComponent<HoldersProps> = ({ wines, selected, onToggle }) => {
+  const holders = groupByOwner(wines);
   const most = holders[0]?.bottles ?? 1;
 
   return (
     <ul className={styles.holders}>
       {holders.map((holder) => {
-        const isSelected = selected === holder.name;
+        const isSelected = selected.includes(holder.name);
 
         return (
           <li key={holder.name}>
-            <button
-              type="button"
-              className={`${styles.holder} ${isSelected ? styles.selected : ''}`}
-              onClick={() => onSelect(isSelected ? null : holder.name)}
-              aria-pressed={isSelected}
-            >
-              <span className={styles.name}>Hos {holder.name}</span>
+            <button type="button" className={`${styles.holder} ${isSelected ? styles.selected : ''}`} onClick={() => onToggle(holder.name)} aria-pressed={isSelected}>
+              <span className={styles.name}>{holder.name}</span>
               <span className={styles.count}>
                 {holder.bottles}
                 <span className={styles.unit}>{holder.bottles === 1 ? 'flaske' : 'flasker'}</span>

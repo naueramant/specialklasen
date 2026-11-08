@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import { Modal } from '../../../../components/Dialog';
 import WineKindBadge from '../../../../components/WineKindBadge';
 import type { Wine } from '../../../../models/wines';
-import { formatDate, formatVintage } from '../../../../utils/format';
+import { formatDate, formatVintage, getOwner } from '../../../../utils/format';
 import styles from './index.module.scss';
 
 interface WineDetailsModalProps {
@@ -43,8 +43,13 @@ const WineDetailsModal: FunctionComponent<WineDetailsModalProps> = ({ wine, onCl
           </div>
 
           <div className={styles.detail}>
+            <span className={styles.detailLabel}>Ejer:</span>
+            <span className={styles.value}>{getOwner(wine)}</span>
+          </div>
+
+          <div className={styles.detail}>
             <span className={styles.detailLabel}>Placering:</span>
-            <span className={styles.value}>{wine.location}</span>
+            <span className={styles.value}>{wine.location || '—'}</span>
           </div>
 
           <div className={styles.detail}>

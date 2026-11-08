@@ -2,13 +2,52 @@ import { useQuery } from '@tanstack/react-query';
 import type { Event } from '../../models/event';
 import { pb } from './client';
 
+const pickSingleFileName = (value: unknown): string | undefined => {
+  if (typeof value === 'string' && value.length > 0) return value;
+  if (Array.isArray(value) && typeof value[0] === 'string' && value[0].length > 0) return value[0];
+  return undefined;
+};
+
+const normalizeExpandedAlbum = (record: any): Event['albumExpanded'] | undefined => {
+  if (!record || typeof record !== 'object') return undefined;
+
+  const id = typeof record?.id === 'string' ? record.id : '';
+  if (!id) return undefined;
+
+  return {
+    id,
+    collectionId: typeof record?.collectionId === 'string' ? record.collectionId : undefined,
+    collectionName: typeof record?.collectionName === 'string' ? record.collectionName : undefined,
+    images: Array.isArray(record?.images) ? record.images : [],
+    title: typeof record?.title === 'string' ? record.title : undefined,
+    date: typeof record?.date === 'string' ? record.date : undefined,
+  };
+};
+
+const normalizeEvent = (record: any): Event => {
+  return {
+    id: typeof record?.id === 'string' ? record.id : undefined,
+    collectionId: typeof record?.collectionId === 'string' ? record.collectionId : undefined,
+    collectionName: typeof record?.collectionName === 'string' ? record.collectionName : undefined,
+    title: String(record?.title ?? ''),
+    description: String(record?.description ?? ''),
+    location: String(record?.location ?? ''),
+    startDate: String(record?.startDate ?? ''),
+    endDate: String(record?.endDate ?? ''),
+    album: typeof record?.album === 'string' ? record.album : undefined,
+    albumExpanded: normalizeExpandedAlbum(record?.expand?.album),
+    coverFromAlbum: typeof record?.coverFromAlbum === 'string' ? record.coverFromAlbum : undefined,
+    coverImage: pickSingleFileName(record?.coverImage ?? record?.cover),
+  };
+};
+
 export const useEvents = () => {
   return useQuery({
     queryKey: ['events'],
     queryFn: async () => {
-      // getFullList pages through every record; getList stops at the first 30
-      const items = await pb.collection('calendar').getFullList();
-      return items as unknown as Event[];
+      // getFullList pages through every record instead of stopping at a fixed page size
+      const items = await pb.collection('calendar').getFullList({ expand: 'album' });
+      return items.map(normalizeEvent);
     },
   });
 };
