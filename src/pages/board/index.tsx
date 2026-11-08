@@ -77,8 +77,8 @@ const BoardPage: FunctionComponent = () => {
             </tr>
           </thead>
           <tbody>
-            {BOARD_TERMS.map((term, index) => (
-              <tr key={term.year} className={index === 0 ? styles.current : undefined} aria-current={index === 0 ? 'true' : undefined}>
+            {BOARD_TERMS.map((term) => (
+              <tr key={term.year}>
                 <th scope="row" className={styles.year}>
                   {term.year}
                 </th>

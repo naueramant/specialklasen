@@ -120,19 +120,6 @@
   }
 }
 
-// the sitting board's year stands out from the history below it
-.current {
-  background-color: rgba(148, 60, 30, 0.25);
-
-  .year {
-    color: var(--color-primary-text);
-  }
-
-  .holderName {
-    color: var(--color-text);
-  }
-}
-
 .year {
   font-family: 'Anton', sans-serif;
   font-size: 1.75rem;
