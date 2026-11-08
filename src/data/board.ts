@@ -38,6 +38,11 @@ export const BOARD_TERMS: BoardTerm[] = [
       { post: 'Pøbel', title: 'Zinfandelicious', member: 'jacob' },
     ],
   },
+  // not in the minutes yet; an empty list shows as "Udfyldes snart"
+  {
+    year: 2024,
+    posts: [],
+  },
   {
     year: 2023,
     elected: '2023-11-23',

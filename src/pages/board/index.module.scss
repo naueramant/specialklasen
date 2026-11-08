@@ -164,6 +164,12 @@
   color: var(--color-text-muted);
 }
 
+// a year whose board isn't written down yet
+.pending {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
 // on narrow screens each year becomes a block with one line per post
 @media (max-width: 760px) {
   .history {
@@ -201,6 +207,10 @@
       padding: 0.6rem 1rem;
 
       // the post name, since the column headers are hidden here
+      &.pending::before {
+        content: none;
+      }
+
       &::before {
         content: attr(data-label);
         flex: 0 0 6.5rem;

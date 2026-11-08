@@ -82,25 +82,31 @@ const BoardPage: FunctionComponent = () => {
                 <th scope="row" className={styles.year}>
                   {term.year}
                 </th>
-                {columns.map((column) => {
-                  const post = term.posts.find(column.matches);
-                  const member = post && getMember(post.member);
-                  return (
-                    <td key={column.label} data-label={post?.post ?? column.label}>
-                      {post ? (
-                        <span className={styles.holder}>
-                          {member && <MemberPhoto image={member.image} alt="" className={styles.avatar} />}
-                          <span className={styles.holderText}>
-                            <span className={styles.holderTitle}>{post.title ?? post.post}</span>
-                            <span className={styles.holderName}>{member?.name.split(' ')[0] ?? post.member}</span>
+                {term.posts.length === 0 && (
+                  <td colSpan={columns.length} className={styles.pending}>
+                    Udfyldes snart
+                  </td>
+                )}
+                {term.posts.length > 0 &&
+                  columns.map((column) => {
+                    const post = term.posts.find(column.matches);
+                    const member = post && getMember(post.member);
+                    return (
+                      <td key={column.label} data-label={post?.post ?? column.label}>
+                        {post ? (
+                          <span className={styles.holder}>
+                            {member && <MemberPhoto image={member.image} alt="" className={styles.avatar} />}
+                            <span className={styles.holderText}>
+                              <span className={styles.holderTitle}>{post.title ?? post.post}</span>
+                              <span className={styles.holderName}>{member?.name.split(' ')[0] ?? post.member}</span>
+                            </span>
                           </span>
-                        </span>
-                      ) : (
-                        <span className={styles.empty}>—</span>
-                      )}
-                    </td>
-                  );
-                })}
+                        ) : (
+                          <span className={styles.empty}>—</span>
+                        )}
+                      </td>
+                    );
+                  })}
               </tr>
             ))}
           </tbody>
