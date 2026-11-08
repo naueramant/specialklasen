@@ -1,0 +1,150 @@
+// the next evening, as a rust slab linking to the calendar
+.nextEvent {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem 2rem;
+  margin-bottom: 4rem;
+  padding: 1.25rem 1.75rem;
+  background-color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  color: var(--color-on-primary);
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-background);
+    color: var(--color-text);
+
+    .arrow {
+      transform: translateX(0.25rem);
+    }
+  }
+}
+
+.nextDate {
+  flex-shrink: 0;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.nextBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.nextLabel {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nextTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.nextLocation {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.arrow {
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 600px) {
+  .nextEvent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .arrow {
+    display: none;
+  }
+}
+
+.members {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+
+  // keep every card in a row the same height
+  > li {
+    display: flex;
+
+    > * {
+      flex: 1;
+    }
+  }
+}
+
+.memberCard {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.memberBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.quote {
+  margin: 0;
+  flex: 1;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.memberName {
+  margin: 0;
+  font-family: 'Anton', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.imageFrame {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nextEvent:hover .arrow {
+    transform: none;
+  }
+}

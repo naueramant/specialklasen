@@ -1,5 +1,6 @@
 .card {
   background-color: var(--color-primary);
+  color: var(--color-on-primary);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   border: 2px solid transparent;
@@ -9,19 +10,48 @@
     color 0.3s,
     border 0.3s;
 
-  &:hover {
-    background-color: var(--color-background);
-    box-sizing: border-box;
-    border: 2px solid var(--color-primary);
-  }
-
   &.outlined {
     border: 2px solid var(--color-primary);
     background-color: transparent;
+    color: var(--color-text);
+  }
 
-    &:hover {
-      background-color: var(--color-primary);
-      color: var(--color-background);
+  // only cards you can act on change on hover
+  &.interactive {
+    position: relative;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-within {
+      background-color: var(--color-background);
+      border-color: var(--color-primary);
     }
+
+    &.outlined:hover,
+    &.outlined:focus-within {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    // the stretched button draws the focus ring for the whole card
+    &:has(:focus-visible) {
+      outline: 2px solid var(--color-primary-text);
+      outline-offset: 3px;
+    }
+  }
+}
+
+.cardButton {
+  all: unset;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
   }
 }

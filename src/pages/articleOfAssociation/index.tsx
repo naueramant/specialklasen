@@ -1,12 +1,15 @@
 import type { FunctionComponent } from 'react';
 import { BodyText, ImpactText } from '../../components/Text';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import styles from './index.module.scss';
 
 const ArticleOfAssociationPage: FunctionComponent = () => {
+  useDocumentTitle('Vedtægter');
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <ImpactText>Vedtægter for Specialklasen</ImpactText>
+        <ImpactText as="h1">Vedtægter for Specialklasen</ImpactText>
       </header>
 
       <div className={styles.content}>
@@ -96,19 +99,21 @@ const ArticleOfAssociationPage: FunctionComponent = () => {
           </div>
           <div className={styles.subsection}>
             <p className={styles.subsectionTitle}>Stk 8.</p>
-            <BodyText>Generalforsamlingens dagsorden</BodyText>
-            <ul className={styles.agenda}>
-              <li>Valg af dirigent og stemmetællere</li>
-              <li>Alle skal have vin i glasset</li>
-              <li>Bestyrelsens beretning</li>
-              <li>Fremlæggelse af regnskab til godkendelse</li>
-              <li>Fastsættelse af kontingent</li>
-              <li>Indkomne forslag</li>
-              <li>Fremlæggelse af handlingsplan og budget</li>
-              <li>Valg af bestyrelse og suppleant</li>
-              <li>Valg af revisor</li>
-              <li>Evt.</li>
-            </ul>
+            <div>
+              <BodyText>Generalforsamlingens dagsorden</BodyText>
+              <ul className={styles.agenda}>
+                <li>Valg af dirigent og stemmetællere</li>
+                <li>Alle skal have vin i glasset</li>
+                <li>Bestyrelsens beretning</li>
+                <li>Fremlæggelse af regnskab til godkendelse</li>
+                <li>Fastsættelse af kontingent</li>
+                <li>Indkomne forslag</li>
+                <li>Fremlæggelse af handlingsplan og budget</li>
+                <li>Valg af bestyrelse og suppleant</li>
+                <li>Valg af revisor</li>
+                <li>Evt.</li>
+              </ul>
+            </div>
           </div>
           <div className={styles.subsection}>
             <p className={styles.subsectionTitle}>Stk 9.</p>
@@ -234,9 +239,29 @@ const ArticleOfAssociationPage: FunctionComponent = () => {
           </div>
         </section>
 
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>§12 Logens skikke</h2>
+          <div className={styles.subsection}>
+            <p className={styles.subsectionTitle}>Stk 1.</p>
+            <BodyText>
+              Logen skal ud af huset én gang om året til en smagning, der afholdes af andre end logens medlemmer. Logen giver et bidrag, hvis størrelse fastsættes ved afstemning,
+              og resten betales af medlemmerne selv.
+            </BodyText>
+          </div>
+          <div className={styles.subsection}>
+            <p className={styles.subsectionTitle}>Stk 2.</p>
+            <BodyText>Der skal altid være Champagne, medmindre andet aftales.</BodyText>
+          </div>
+          <div className={styles.subsection}>
+            <p className={styles.subsectionTitle}>Stk 3.</p>
+            <BodyText>Alle glas skal klinkes ved første skål af en nyskænket vin.</BodyText>
+          </div>
+        </section>
+
         <footer className={styles.footer}>
           <div className={styles.adoption}>
             <BodyText>Vedtaget på den stiftende generalforsamling den 21.11.2023.</BodyText>
+            <BodyText>§12 tilføjet på generalforsamlingen i 2024.</BodyText>
           </div>
 
           <div className={styles.signature}>

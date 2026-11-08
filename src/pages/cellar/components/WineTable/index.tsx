@@ -1,52 +1,71 @@
 import type { FunctionComponent } from 'react';
 import { useMemo, useState } from 'react';
+import { IoArrowDown, IoArrowUp, IoClose } from 'react-icons/io5';
+import WineKindBadge from '../../../../components/WineKindBadge';
 import type { Wine } from '../../../../models/wines';
+import { formatDate, formatVintage, formatWineKind } from '../../../../utils/format';
 import WineDetailsModal from '../WineDetailsModal/index';
 import styles from './index.module.scss';
 
 interface WineTableProps {
   wines?: Wine[];
+  // only show the bottles kept by this member
+  holder?: string | null;
+  onClearHolder?: () => void;
 }
 
 type SortField = keyof Wine;
 type SortDirection = 'asc' | 'desc';
 
-const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
+const COLUMNS: { field: SortField; label: string }[] = [
+  { field: 'name', label: 'Navn' },
+  { field: 'year', label: 'År' },
+  { field: 'country', label: 'Land' },
+  { field: 'region', label: 'Region' },
+  { field: 'grape', label: 'Drue' },
+  { field: 'kind', label: 'Type' },
+  { field: 'location', label: 'Placering' },
+  { field: 'bought', label: 'Købt' },
+  { field: 'quantity', label: 'Antal' },
+  { field: 'remaining', label: 'Tilbage' },
+];
+
+const formatBought = (wine: Wine) => formatDate(wine.bought, { year: 'numeric', month: 'short', day: 'numeric' });
+
+const RemainingBadge: FunctionComponent<{ wine: Wine }> = ({ wine }) =>
+  wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : <span>—</span>;
+
+const WineTable: FunctionComponent<WineTableProps> = ({ wines, holder, onClearHolder }) => {
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedWine, setSelectedWine] = useState<Wine | null>(null);
-  const [showWineDetails, setShowWineDetails] = useState(false);
 
   const filteredAndSortedWines = useMemo(() => {
     // First filter wines based on search term
     const filtered = wines?.filter((wine) => {
+      if (holder && (wine.location || 'Ukendt') !== holder) return false;
       if (!searchTerm) return true;
 
       const searchLower = searchTerm.toLowerCase();
-      return (
-        wine.name.toLowerCase().includes(searchLower) ||
-        wine.country.toLowerCase().includes(searchLower) ||
-        wine.region.toLowerCase().includes(searchLower) ||
-        wine.grape.toLowerCase().includes(searchLower) ||
-        wine.kind.toLowerCase().includes(searchLower) ||
-        wine.location.toLowerCase().includes(searchLower) ||
-        new Date(wine.bought).toLocaleDateString().toLowerCase().includes(searchLower) ||
-        wine.year.toString().includes(searchLower)
+      return [wine.name, wine.country, wine.region, wine.grape, wine.kind, formatWineKind(wine.kind), wine.location, formatBought(wine), formatVintage(wine.year)].some((value) =>
+        value?.toLowerCase().includes(searchLower)
       );
     });
 
-    // Then sort the filtered results
+    // Then sort the filtered results; empty values always go last
     return filtered?.sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
+      const aEmpty = aValue === undefined || aValue === '';
+      const bEmpty = bValue === undefined || bValue === '';
 
-      if (aValue === undefined && bValue === undefined) return 0;
-      if (aValue === undefined) return sortDirection === 'asc' ? 1 : -1;
-      if (bValue === undefined) return sortDirection === 'asc' ? -1 : 1;
+      if (aEmpty && bEmpty) return 0;
+      if (aEmpty) return 1;
+      if (bEmpty) return -1;
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        return sortDirection === 'asc' ? aValue.localeCompare(bValue, 'da') : bValue.localeCompare(aValue, 'da');
       }
 
       if (typeof aValue === 'number' && typeof bValue === 'number') {
@@ -55,7 +74,7 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
 
       return 0;
     });
-  }, [wines, sortField, sortDirection, searchTerm]);
+  }, [wines, sortField, sortDirection, searchTerm, holder]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -66,59 +85,61 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
     }
   };
 
-  const getSortIcon = (field: SortField) => {
-    if (sortField !== field) return '';
-    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+  const getAriaSort = (field: SortField) => {
+    if (sortField !== field) return undefined;
+    return sortDirection === 'asc' ? 'ascending' : 'descending';
   };
 
-  const handleWineClick = (wine: Wine) => {
-    setSelectedWine(wine);
-    setShowWineDetails(true);
-  };
-
-  const handleCloseWineDetails = () => {
-    setShowWineDetails(false);
-    setSelectedWine(null);
-  };
+  const SortIcon = sortDirection === 'asc' ? IoArrowUp : IoArrowDown;
+  const resultCount = filteredAndSortedWines?.length ?? 0;
 
   return (
     <>
       <div className={styles.searchContainer}>
-        <input type="text" placeholder="Søg vine..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={styles.searchInput} />
+        <label htmlFor="wine-search" className="visually-hidden">
+          Søg i kælderen
+        </label>
+        <input id="wine-search" type="search" placeholder="Søg vine..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={styles.searchInput} />
+        {searchTerm && (
+          <button type="button" className={styles.clearSearch} onClick={() => setSearchTerm('')} aria-label="Ryd søgning">
+            <IoClose aria-hidden />
+          </button>
+        )}
       </div>
+
+      {holder && (
+        <p className={styles.holderFilter}>
+          Viser kun flasker hos {holder}.{' '}
+          <button type="button" className={styles.linkButton} onClick={onClearHolder}>
+            Vis hele kælderen
+          </button>
+        </p>
+      )}
+
+      <p className={searchTerm ? styles.resultCount : 'visually-hidden'} aria-live="polite">
+        {searchTerm ? `${resultCount} ${resultCount === 1 ? 'vin' : 'vine'} matcher "${searchTerm}"` : ''}
+      </p>
 
       {/* Mobile Sort Controls */}
       <div className={styles.mobileSortContainer}>
-        <select
-          value={`${sortField}-${sortDirection}`}
-          onChange={(e) => {
-            const [field, direction] = e.target.value.split('-') as [SortField, SortDirection];
-            setSortField(field);
-            setSortDirection(direction);
-          }}
-          className={styles.mobileSortSelect}
-        >
-          <option value="name-asc">Navn (A-Z)</option>
-          <option value="name-desc">Navn (Z-A)</option>
-          <option value="year-desc">År (Nyeste)</option>
-          <option value="year-asc">År (Ældste)</option>
-          <option value="country-asc">Land (A-Z)</option>
-          <option value="country-desc">Land (Z-A)</option>
-          <option value="region-asc">Region (A-Z)</option>
-          <option value="region-desc">Region (Z-A)</option>
-          <option value="grape-asc">Drue (A-Z)</option>
-          <option value="grape-desc">Drue (Z-A)</option>
-          <option value="kind-asc">Type (A-Z)</option>
-          <option value="kind-desc">Type (Z-A)</option>
-          <option value="location-asc">Placering (A-Z)</option>
-          <option value="location-desc">Placering (Z-A)</option>
-          <option value="bought-desc">Købt (Nyeste)</option>
-          <option value="bought-asc">Købt (Ældste)</option>
-          <option value="quantity-desc">Antal (Flest)</option>
-          <option value="quantity-asc">Antal (Færrest)</option>
-          <option value="remaining-desc">Tilbage (Flest)</option>
-          <option value="remaining-asc">Tilbage (Færrest)</option>
+        <label htmlFor="wine-sort" className="visually-hidden">
+          Sorter efter
+        </label>
+        <select id="wine-sort" value={sortField} onChange={(e) => setSortField(e.target.value as SortField)} className={styles.mobileSortSelect}>
+          {COLUMNS.map(({ field, label }) => (
+            <option key={field} value={field}>
+              Sorter efter {label.toLowerCase()}
+            </option>
+          ))}
         </select>
+        <button
+          type="button"
+          className={styles.sortDirectionButton}
+          onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
+          aria-label={sortDirection === 'asc' ? 'Stigende, skift til faldende' : 'Faldende, skift til stigende'}
+        >
+          <SortIcon aria-hidden />
+        </button>
       </div>
 
       {/* Desktop Table */}
@@ -126,133 +147,115 @@ const WineTable: FunctionComponent<WineTableProps> = ({ wines }) => {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th onClick={() => handleSort('name')} className={styles.sortable}>
-                Navn{getSortIcon('name')}
-              </th>
-              <th onClick={() => handleSort('year')} className={styles.sortable}>
-                År{getSortIcon('year')}
-              </th>
-              <th onClick={() => handleSort('country')} className={styles.sortable}>
-                Land{getSortIcon('country')}
-              </th>
-              <th onClick={() => handleSort('region')} className={styles.sortable}>
-                Region{getSortIcon('region')}
-              </th>
-              <th onClick={() => handleSort('grape')} className={styles.sortable}>
-                Drue{getSortIcon('grape')}
-              </th>
-              <th onClick={() => handleSort('kind')} className={styles.sortable}>
-                Type{getSortIcon('kind')}
-              </th>
-              <th onClick={() => handleSort('location')} className={styles.sortable}>
-                Placering{getSortIcon('location')}
-              </th>
-              <th onClick={() => handleSort('bought')} className={styles.sortable}>
-                Købt{getSortIcon('bought')}
-              </th>
-              <th onClick={() => handleSort('quantity')} className={styles.sortable}>
-                Antal{getSortIcon('quantity')}
-              </th>
-              <th onClick={() => handleSort('remaining')} className={styles.sortable}>
-                Tilbage{getSortIcon('remaining')}
-              </th>
+              {COLUMNS.map(({ field, label }) => (
+                <th key={field} aria-sort={getAriaSort(field)}>
+                  <button type="button" className={styles.sortButton} onClick={() => handleSort(field)}>
+                    {label}
+                    <span className={styles.sortIcon} aria-hidden>
+                      {sortField === field && <SortIcon />}
+                    </span>
+                  </button>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedWines?.map((wine, index) => (
-              <tr key={`${wine.name}-${wine.year}-${index}`} className={styles.clickableRow} onClick={() => handleWineClick(wine)}>
-                <td className={styles.wineName}>{wine.name}</td>
-                <td>{wine.year}</td>
+            {filteredAndSortedWines?.map((wine) => (
+              <tr key={wine.id} className={`${styles.clickableRow} ${wine.remaining === 0 ? styles.drunk : ''}`} onClick={() => setSelectedWine(wine)}>
+                <td className={styles.wineName}>
+                  <button type="button" className={styles.wineNameButton} onClick={() => setSelectedWine(wine)}>
+                    {wine.name}
+                  </button>
+                </td>
+                <td>{formatVintage(wine.year)}</td>
                 <td>{wine.country}</td>
                 <td>{wine.region}</td>
                 <td>{wine.grape}</td>
                 <td>
-                  <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
+                  <WineKindBadge kind={wine.kind} />
                 </td>
                 <td>{wine.location}</td>
-                <td>{new Date(wine.bought).toLocaleDateString()}</td>
-                <td>{wine.quantity}</td>
-                <td>{wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : '-'}</td>
+                <td className={styles.nowrap}>{formatBought(wine)}</td>
+                <td className={styles.number}>{wine.quantity}</td>
+                <td className={styles.number}>
+                  <RemainingBadge wine={wine} />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {filteredAndSortedWines?.length === 0 && searchTerm && (
+        {resultCount === 0 && searchTerm && (
           <div className={styles.emptyState}>
-            <p>Ingen vine fundet der matcher "{searchTerm}".</p>
-          </div>
-        )}
-        {wines?.length === 0 && (
-          <div className={styles.emptyState}>
-            <p>Ingen vine i kælderen endnu.</p>
+            <p>Ingen vine matcher "{searchTerm}". Fuck det er fattigt 💸</p>
           </div>
         )}
       </div>
 
       {/* Mobile Cards */}
-      <div className={styles.mobileCards}>
-        {filteredAndSortedWines?.map((wine, index) => (
-          <div key={`${wine.name}-${wine.year}-${index}`} className={`${styles.wineCard} ${styles.clickableCard}`} onClick={() => handleWineClick(wine)}>
+      <ul className={styles.mobileCards}>
+        {filteredAndSortedWines?.map((wine) => (
+          <li key={wine.id} className={`${styles.wineCard} ${styles.clickableCard} ${wine.remaining === 0 ? styles.drunk : ''}`}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardWineName}>{wine.name}</h3>
-              <span className={styles.cardYear}>{wine.year}</span>
+              <h3 className={styles.cardWineName}>
+                <button type="button" className={styles.cardWineButton} onClick={() => setSelectedWine(wine)}>
+                  {wine.name}
+                </button>
+              </h3>
+              <span className={styles.cardYear}>{formatVintage(wine.year)}</span>
             </div>
 
-            <div className={styles.cardBody}>
+            <dl className={styles.cardBody}>
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Type:</span>
-                <span className={`${styles.kindBadge} ${styles[wine.kind.toLowerCase()]}`}>{wine.kind}</span>
+                <dt className={styles.cardLabel}>Type</dt>
+                <dd>
+                  <WineKindBadge kind={wine.kind} />
+                </dd>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Oprindelse:</span>
-                <span>
-                  {wine.country}, {wine.region}
-                </span>
+                <dt className={styles.cardLabel}>Oprindelse</dt>
+                <dd>{[wine.country, wine.region].filter(Boolean).join(', ')}</dd>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Drue:</span>
-                <span>{wine.grape}</span>
+                <dt className={styles.cardLabel}>Drue</dt>
+                <dd>{wine.grape}</dd>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Placering:</span>
-                <span>{wine.location}</span>
+                <dt className={styles.cardLabel}>Placering</dt>
+                <dd>{wine.location}</dd>
               </div>
 
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Købt:</span>
-                <span>{new Date(wine.bought).toLocaleDateString()}</span>
+                <dt className={styles.cardLabel}>Købt</dt>
+                <dd>{formatBought(wine)}</dd>
               </div>
 
               <div className={styles.cardFooter}>
                 <div className={styles.quantityInfo}>
-                  <span className={styles.cardLabel}>Antal:</span>
-                  <span>{wine.quantity}</span>
+                  <dt className={styles.cardLabel}>Antal</dt>
+                  <dd>{wine.quantity}</dd>
                 </div>
                 <div className={styles.quantityInfo}>
-                  <span className={styles.cardLabel}>Tilbage:</span>
-                  {wine.remaining !== undefined ? <span className={`${styles.quantityBadge} ${wine.remaining === 0 ? styles.empty : ''}`}>{wine.remaining}</span> : <span>-</span>}
+                  <dt className={styles.cardLabel}>Tilbage</dt>
+                  <dd>
+                    <RemainingBadge wine={wine} />
+                  </dd>
                 </div>
               </div>
-            </div>
-          </div>
+            </dl>
+          </li>
         ))}
 
-        {filteredAndSortedWines?.length === 0 && searchTerm && (
-          <div className={styles.emptyState}>
-            <p>Ingen vine fundet der matcher "{searchTerm}".</p>
-          </div>
+        {resultCount === 0 && searchTerm && (
+          <li className={styles.emptyState}>
+            <p>Ingen vine matcher "{searchTerm}". Fuck det er fattigt 💸</p>
+          </li>
         )}
-        {wines?.length === 0 && (
-          <div className={styles.emptyState}>
-            <p>Ingen vine i kælderen endnu.</p>
-          </div>
-        )}
-      </div>
+      </ul>
 
-      {selectedWine && <WineDetailsModal wine={selectedWine} isOpen={showWineDetails} onClose={handleCloseWineDetails} />}
+      {selectedWine && <WineDetailsModal wine={selectedWine} onClose={() => setSelectedWine(null)} />}
     </>
   );
 };

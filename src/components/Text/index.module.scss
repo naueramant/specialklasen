@@ -1,20 +1,25 @@
 .impactText {
   font-family: 'Anton', sans-serif;
-  font-size: 3.5rem;
+  font-size: 2.75rem;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   max-width: 800px;
   display: inline-block;
   line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
 }
 
 .bodyText {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   line-height: 1.5;
+  max-width: 70ch;
+  text-wrap: pretty;
 }
 
 @media (max-width: 768px) {
   .impactText {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 }

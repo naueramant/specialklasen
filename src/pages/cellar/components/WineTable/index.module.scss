@@ -1,12 +1,19 @@
+// Scrolls sideways on narrow screens; on wide screens the overflow is released
+// so the sticky header can stick to the viewport
 .tableContainer {
   width: 100%;
   overflow-x: auto;
   border-radius: var(--border-radius);
   border: 2px solid var(--color-primary);
   box-sizing: border-box;
+
+  @media (min-width: 1200px) {
+    overflow-x: visible;
+  }
 }
 
 .searchContainer {
+  position: relative;
   margin-bottom: 1rem;
   background-color: var(--color-primary);
   border-radius: var(--border-radius);
@@ -26,14 +33,64 @@
   font-family: inherit;
 
   &::placeholder {
-    color: rgba(238, 227, 210, 0.6);
+    color: var(--color-text-muted);
   }
 
-  &:focus {
-    outline: none;
-    border-color: var(--color-text);
-    box-shadow: 0 0 0 2px rgba(238, 227, 210, 0.2);
+  &::-webkit-search-cancel-button {
+    display: none;
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
+  }
+}
+
+.clearSearch {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  transform: translateY(-50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.holderFilter {
+  margin: -0.25rem 0 1rem;
+}
+
+.linkButton {
+  all: unset;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-primary-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 3px;
+  }
+}
+
+// bottles that are all drunk stay listed as history, but recede
+.drunk {
+  opacity: 0.55;
+}
+
+.resultCount {
+  margin: -0.25rem 0 1rem;
+  color: var(--color-text-muted);
 }
 
 .table {
@@ -50,21 +107,13 @@
 
   th {
     background-color: var(--color-primary);
-    color: var(--color-text);
+    color: var(--color-on-primary);
     font-weight: 600;
     position: sticky;
     top: 0;
     z-index: 1;
-
-    &.sortable {
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: rgba(148, 60, 30, 0.8);
-      }
-    }
+    padding: 0;
+    white-space: nowrap;
   }
 
   tbody tr {
@@ -80,10 +129,37 @@
   }
 }
 
+.sortButton {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(28, 26, 27, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: -4px;
+  }
+}
+
+.sortIcon {
+  display: inline-flex;
+  width: 1em;
+}
+
 .clickableRow {
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     background-color: rgba(148, 60, 30, 0.15) !important;
   }
 
@@ -97,32 +173,23 @@
   color: var(--color-text);
 }
 
-.kindBadge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-transform: uppercase;
+.wineNameButton {
+  all: unset;
+  cursor: pointer;
+  text-align: left;
 
-  &.red {
-    background-color: rgba(220, 38, 127, 0.2);
-    color: #ff6b9d;
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 4px;
   }
+}
 
-  &.white {
-    background-color: rgba(255, 206, 84, 0.2);
-    color: #ffd700;
-  }
+.nowrap {
+  white-space: nowrap;
+}
 
-  &.sparkling {
-    background-color: rgba(123, 104, 238, 0.2);
-    color: #b19cd9;
-  }
-
-  &.rosé {
-    background-color: rgba(255, 182, 193, 0.2);
-    color: #ffb6c1;
-  }
+.number {
+  font-variant-numeric: tabular-nums;
 }
 
 .quantityBadge {
@@ -142,18 +209,34 @@
 .emptyState {
   padding: 2rem;
   text-align: center;
-  color: rgba(238, 227, 210, 0.6);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
 // Mobile sort controls
 .mobileSortContainer {
   display: none;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
+.sortDirectionButton {
+  flex-shrink: 0;
+  width: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
 .mobileSortSelect {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 0.75rem;
   padding-right: 2.5rem; // Give more space for the dropdown arrow
   border: 2px solid var(--color-primary);
@@ -171,11 +254,6 @@
   background-position: right 0.75rem center;
   background-size: 1rem;
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(238, 227, 210, 0.2);
-  }
-
   option {
     background-color: var(--color-secondary);
     color: var(--color-text);
@@ -187,9 +265,13 @@
   display: none;
   gap: 1rem;
   flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .wineCard {
+  position: relative;
   background-color: var(--color-secondary);
   border: 2px solid var(--color-primary);
   border-radius: var(--border-radius);
@@ -210,6 +292,27 @@
   &:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px rgba(148, 60, 30, 0.3) !important;
+  }
+
+  &:has(:focus-visible) {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 3px;
+  }
+}
+
+// stretched over the whole card so it is the card's single click target
+.cardWineButton {
+  all: unset;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
   }
 }
 
@@ -234,7 +337,7 @@
 .cardYear {
   font-size: 1rem;
   font-weight: 500;
-  color: rgba(238, 227, 210, 0.8);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
@@ -242,6 +345,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin: 0;
+
+  dd {
+    margin: 0;
+  }
 }
 
 .cardRow {
@@ -253,7 +361,7 @@
 
 .cardLabel {
   font-weight: 500;
-  color: rgba(238, 227, 210, 0.8);
+  color: var(--color-text-muted);
   min-width: 80px;
   font-size: 0.9rem;
 }
@@ -281,7 +389,7 @@
 
   // Show mobile elements
   .mobileSortContainer {
-    display: block;
+    display: flex;
   }
 
   .mobileCards {
@@ -295,7 +403,6 @@
   }
 
   // Adjust badges for mobile
-  .kindBadge,
   .quantityBadge {
     font-size: 0.75rem;
     padding: 0.3rem 0.6rem;

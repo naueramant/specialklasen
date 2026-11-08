@@ -1,80 +1,101 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    .title {
+      text-decoration: underline;
+      text-decoration-color: var(--color-primary);
+      text-underline-offset: 6px;
+      text-decoration-thickness: 3px;
+    }
+
+    .mosaic {
+      border-color: var(--color-primary-text);
+    }
+
+    .cover .media {
+      transform: scale(1.04);
+    }
+  }
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.date {
-  font-size: 0.9rem;
-  color: var(--color-grey-dark);
-}
-
-.albumCard {
+// a rust frame holding a cover photo and two smaller tiles
+.mosaic {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
-  max-height: 340px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: hidden; /* prevent children from overflowing the card */
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.375rem;
+  aspect-ratio: 3 / 2;
+  padding: 0.375rem;
+  background-color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  transition: border-color 0.2s ease;
+
+  &.single {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
 }
 
-.imageWrap {
+.tile {
   position: relative;
   overflow: hidden;
-  border-radius: calc(var(--border-radius) / 1.5);
-  height: 0;
-  padding-bottom: 100%; /* square */
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.25);
+
+  &.cover {
+    grid-row: span 2;
+  }
 }
 
-.cover {
+.media {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover zoom intentionally removed from album list; zoom lives on details page */
 .overlay {
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  text-align: center;
+  background: rgba(28, 26, 27, 0.6);
+  color: var(--color-text);
+  font-family: 'Anton', sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
 }
 
-.overlayCount {
-  font-weight: 700;
-  font-size: 1.2rem;
+.caption {
+  margin-top: 1rem;
 }
 
-.overlayText {
-  font-size: 0.85rem;
-  opacity: 0.95;
+.title {
+  margin: 0 0 0.35rem;
+  font-family: 'Anton', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--color-text);
 }
 
-.cardLink {
-  display: block;
-  color: inherit;
-  text-decoration: none;
+.meta {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardLink:hover .cover .media {
+    transform: none;
+  }
 }

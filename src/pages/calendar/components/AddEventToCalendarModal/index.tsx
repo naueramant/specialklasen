@@ -1,92 +1,65 @@
 import type { FunctionComponent } from 'react';
+import { Modal } from '../../../../components/Dialog';
 import type { Event } from '../../../../models/event';
+import { formatDate, formatTime, stripClubPrefix } from '../../../../utils/format';
+import { addEventToCalendar, downloadEventIcs } from './helper';
 import styles from './index.module.scss';
 
 interface AddEventToCalendarProps {
   event: Event;
-  isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
-const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({ event, isOpen, onClose, onConfirm }) => {
-  if (!isOpen) return null;
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('da-DK', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+const AddEventToCalendar: FunctionComponent<AddEventToCalendarProps> = ({ event, onClose }) => {
+  const handleGoogle = () => {
+    addEventToCalendar(event);
+    onClose();
   };
 
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('da-DK', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
+  const handleIcs = () => {
+    downloadEventIcs(event);
+    onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+  const endTime = formatTime(event.endDate);
 
   return (
-    <div className={styles.overlay} onClick={handleBackdropClick}>
-      <div className={styles.popup}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>Tilføj til kalender</h2>
-          <button className={styles.closeButton} onClick={onClose}>
-            ×
-          </button>
-        </div>
+    <Modal title="Tilføj til kalender" onClose={onClose}>
+      <div className={styles.eventInfo}>
+        <h3 className={styles.eventTitle}>{stripClubPrefix(event.title)}</h3>
 
-        <div className={styles.content}>
-          <div className={styles.eventInfo}>
-            <h3 className={styles.eventTitle}>{event.title}</h3>
+        <dl className={styles.eventDetails}>
+          <div className={styles.detail}>
+            <dt className={styles.label}>Dato</dt>
+            <dd>{formatDate(event.startDate, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</dd>
+          </div>
 
-            <div className={styles.eventDetails}>
-              <div className={styles.detail}>
-                <span className={styles.label}>Dato:</span>
-                <span>{formatDate(event.startDate)}</span>
-              </div>
+          <div className={styles.detail}>
+            <dt className={styles.label}>Tid</dt>
+            <dd>
+              {formatTime(event.startDate)}
+              {endTime && ` – ${endTime}`}
+            </dd>
+          </div>
 
-              <div className={styles.detail}>
-                <span className={styles.label}>Tid:</span>
-                <span>
-                  {formatTime(event.startDate)}
-                  {event.endDate && ` - ${formatTime(event.endDate)}`}
-                </span>
-              </div>
-
-              {event.location && (
-                <div className={styles.detail}>
-                  <span className={styles.label}>Sted:</span>
-                  <span>{event.location}</span>
-                </div>
-              )}
+          {event.location && (
+            <div className={styles.detail}>
+              <dt className={styles.label}>Sted</dt>
+              <dd>{event.location}</dd>
             </div>
-          </div>
-
-          <p className={styles.question}>Vil du tilføje denne begivenhed til din kalender?</p>
-
-          <div className={styles.actions}>
-            <button className={styles.cancelButton} onClick={onClose}>
-              Annuller
-            </button>
-            <button className={styles.confirmButton} onClick={onConfirm} disabled={!event.startDate}>
-              Tilføj til kalender
-            </button>
-          </div>
-        </div>
+          )}
+        </dl>
       </div>
-    </div>
+
+      <div className={styles.actions}>
+        <button type="button" className={styles.secondaryButton} onClick={handleIcs}>
+          Hent .ics-fil
+        </button>
+        <button type="button" className={styles.primaryButton} onClick={handleGoogle}>
+          Google Kalender
+        </button>
+      </div>
+    </Modal>
   );
 };
 

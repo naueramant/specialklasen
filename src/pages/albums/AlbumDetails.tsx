@@ -1,64 +1,84 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
+import { IoArrowBack } from 'react-icons/io5';
 import { useAlbum } from '../../services/api/albums';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import Card from '../../components/Card';
 import PocketbaseImage from '../../components/PocketbaseImage';
 import ImageLightbox from '../../components/ImageLightbox';
 import styles from './AlbumDetails.module.scss';
 import { ImpactText } from '../../components/Text';
+import { stripClubPrefix, formatDate } from '../../utils/format';
 
 const AlbumDetailsPage: React.FC = () => {
   const { id } = useParams();
   const { data: album, isLoading, error } = useAlbum(id);
+  useDocumentTitle(album ? stripClubPrefix(album.title) : 'Billeder');
 
-  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) {
-    const msg = String((error as Error).message || '');
-    if (msg.toLowerCase().includes('superuser')) {
-      return <div>This album is restricted. Please sign in with an administrator account to view all images.</div>;
+  const renderStatus = () => {
+    if (isLoading) return <p className={styles.status}>Henter album…</p>;
+
+    if (error) {
+      const msg = String((error as Error).message || '');
+      if (msg.toLowerCase().includes('superuser')) {
+        return <p className={styles.status}>Dette album er låst. Log ind som administrator for at se alle billeder.</p>;
+      }
+
+      return <p className={styles.status}>Albummet kunne ikke hentes. Prøv at genindlæse siden.</p>;
     }
 
-    return <div>Error: {msg}</div>;
-  }
-  if (!album) return <div>Album not found</div>;
+    if (!album) return <p className={styles.status}>Albummet findes ikke.</p>;
+
+    return null;
+  };
+
+  const date = album ? formatDate(album.date, undefined, '') : '';
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <ImpactText>{album.title}</ImpactText>
-        <div className={styles.date}>{new Date(album.date).toLocaleDateString('da-DK', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-      </div>
+      <Link to="/albums" className={styles.backLink}>
+        <IoArrowBack aria-hidden /> Alle albums
+      </Link>
 
-      <Card>
-        <div className={styles.gallery}>
-          {album.images.map((img, i) => (
-            <div key={i} className={styles.imageWrap}>
-              <button
-                className={styles.thumbButton}
-                onClick={() => {
-                  setSelected(i);
-                  setOpen(true);
-                }}
-                aria-label={`Open image ${i + 1} of ${album.images.length}`}
-              >
-                <PocketbaseImage album={album} imageName={img} className={styles.cover} />
-              </button>
+      {renderStatus()}
+
+      {album && (
+        <>
+          <div className={styles.header}>
+            <ImpactText as="h1" className={styles.title}>
+              {stripClubPrefix(album.title)}
+            </ImpactText>
+            <p className={styles.date}>
+              {date && <time dateTime={album.date}>{date}</time>}
+              {date && ' · '}
+              {album.images.length === 1 ? '1 billede' : `${album.images.length} billeder`}
+            </p>
+          </div>
+
+          <Card>
+            <div className={styles.gallery}>
+              {album.images.map((img, i) => (
+                <div key={img} className={styles.imageWrap}>
+                  <button type="button" className={styles.thumbButton} onClick={() => setSelected(i)} aria-label={`Åbn billede ${i + 1} af ${album.images.length}`}>
+                    <PocketbaseImage album={album} imageName={img} alt="" className={styles.cover} thumb="800x0" />
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </Card>
+          </Card>
 
-      {open && selected !== null && (
-        <ImageLightbox
-          album={album}
-          index={selected}
-          onClose={() => setOpen(false)}
-          onPrev={() => setSelected((s) => (s === null ? 0 : (s - 1 + album.images.length) % album.images.length))}
-          onNext={() => setSelected((s) => (s === null ? 0 : (s + 1) % album.images.length))}
-        />
+          {selected !== null && (
+            <ImageLightbox
+              album={album}
+              index={selected}
+              onClose={() => setSelected(null)}
+              onPrev={() => setSelected((s) => (s === null ? 0 : (s - 1 + album.images.length) % album.images.length))}
+              onNext={() => setSelected((s) => (s === null ? 0 : (s + 1) % album.images.length))}
+            />
+          )}
+        </>
       )}
     </div>
   );

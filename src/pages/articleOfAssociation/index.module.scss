@@ -26,7 +26,8 @@
 .sectionTitle {
   font-family: 'Anton', sans-serif;
   font-size: 1.5rem;
-  color: var(--color-primary);
+  font-weight: 400;
+  color: var(--color-primary-text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 1rem;
@@ -43,14 +44,20 @@
   &:last-child {
     margin-bottom: 0;
   }
+
+  // align the Stk label with the first line of its paragraph
+  p {
+    margin-block: 0;
+  }
 }
 
 .subsectionTitle {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   margin: 0;
-  font-size: 1.1rem;
-  min-width: 60px;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  min-width: 64px;
   flex-shrink: 0;
 }
 
@@ -60,7 +67,7 @@
 
   li {
     margin-bottom: 0.5rem;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: 1.5;
 
     &:last-child {
@@ -104,7 +111,7 @@
   font-weight: 600;
   font-size: 1.1rem;
   margin: 0;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 // Responsive design

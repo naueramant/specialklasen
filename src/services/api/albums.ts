@@ -7,14 +7,9 @@ export const useAlbums = () => {
   return useQuery({
     queryKey: ['albums'],
     queryFn: async () => {
-      const result = await pb.collection('albums').getList();
-      console.log('Fetched albums:', result.items);
-
-      const url = pb.files.getURL(result.items[0], result.items[0].images[0]);
-
-      console.log('URL', url);
-
-      return result.items as unknown as Album[];
+      // getFullList pages through every record; getList stops at the first 30
+      const items = await pb.collection('albums').getFullList();
+      return items as unknown as Album[];
     },
   });
 };

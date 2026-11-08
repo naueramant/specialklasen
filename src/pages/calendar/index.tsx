@@ -1,145 +1,161 @@
 import { useState, type FunctionComponent } from 'react';
-import Card from '../../components/Card';
+import { IoCalendarOutline } from 'react-icons/io5';
+import Card, { CardButton } from '../../components/Card';
+import LedgerSection from '../../components/LedgerSection';
+import PageIntro from '../../components/PageIntro';
 import { ImpactText } from '../../components/Text';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import type { Event } from '../../models/event';
 import { useEvents } from '../../services/api/events';
+import { formatDate, formatTime, parseDate, stripClubPrefix } from '../../utils/format';
 import AddEventToCalendar from './components/AddEventToCalendarModal';
-import { addEventToCalendar } from './components/AddEventToCalendarModal/helper';
 import styles from './index.module.scss';
 
+type EventState = 'upcoming' | 'tba' | 'past';
+
+interface EventCardProps {
+  event: Event;
+  state: EventState;
+  onAddToCalendar: (event: Event) => void;
+}
+
+const EventCard: FunctionComponent<EventCardProps> = ({ event, state, onAddToCalendar }) => {
+  const description = <div className={styles.description} dangerouslySetInnerHTML={{ __html: event.description }} />;
+
+  return (
+    <Card variant={state === 'past' ? 'outlined' : 'solid'} interactive={state === 'upcoming'}>
+      <article className={styles.eventCard}>
+        <div className={styles.eventHeader}>
+          <div>
+            <div className={styles.eventDate}>{state === 'tba' ? 'TBA' : formatDate(event.startDate, { month: 'short', day: 'numeric' })}</div>
+            {state !== 'tba' && (
+              <div className={styles.eventWhen}>
+                {formatDate(event.startDate, { weekday: 'long' })} · {formatTime(event.startDate)}
+              </div>
+            )}
+          </div>
+          {event.location && <div className={styles.eventLocation}>{event.location}</div>}
+        </div>
+
+        <h3 className={styles.eventTitle}>
+          {state === 'upcoming' ? <CardButton onClick={() => onAddToCalendar(event)}>{stripClubPrefix(event.title)}</CardButton> : stripClubPrefix(event.title)}
+        </h3>
+
+        {event.description &&
+          (state === 'past' ? (
+            <details className={styles.details}>
+              <summary>Læs mere</summary>
+              {description}
+            </details>
+          ) : (
+            description
+          ))}
+
+        {state === 'upcoming' && (
+          <span className={styles.addHint} aria-hidden>
+            <IoCalendarOutline /> Tilføj til kalender
+          </span>
+        )}
+      </article>
+    </Card>
+  );
+};
+
 const CalendarPage: FunctionComponent = () => {
-  const { data: events = [] } = useEvents();
+  useDocumentTitle('Kalender');
+  const { data: events = [], isLoading, error } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
+
+  const currentDate = new Date();
+  const startOf = (event: Event) => parseDate(event.startDate)?.getTime() ?? 0;
 
   // Separate TBA events (no start date) from dated events
-  const tbaEvents = events.filter((event) => !event.startDate);
-  const datedEvents = events.filter((event) => !!event.startDate);
+  const tbaEvents = events.filter((event) => !parseDate(event.startDate));
+  const datedEvents = events.filter((event) => !!parseDate(event.startDate)).sort((a, b) => startOf(a) - startOf(b));
 
-  // Group dated events by year
-  const eventsByYear = datedEvents.reduce(
-    (acc, event) => {
-      const year = new Date(event.startDate).getFullYear();
-      if (!acc[year]) {
-        acc[year] = [];
-      }
-      acc[year].push(event);
-      return acc;
-    },
-    {} as Record<number, Event[]>
-  );
+  // The soonest upcoming event leads the page
+  const nextEvent = datedEvents.find((event) => startOf(event) > currentDate.getTime());
+
+  // Group the remaining dated events by year
+  const eventsByYear = datedEvents
+    .filter((event) => event !== nextEvent)
+    .reduce(
+      (acc, event) => {
+        const year = new Date(event.startDate).getFullYear();
+        if (!acc[year]) {
+          acc[year] = [];
+        }
+        acc[year].push(event);
+        return acc;
+      },
+      {} as Record<number, Event[]>
+    );
 
   // Sort years in descending order
   const sortedYears = Object.keys(eventsByYear)
     .map(Number)
     .sort((a, b) => b - a);
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('da-DK', {
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+  const getState = (event: Event): EventState => (startOf(event) > currentDate.getTime() ? 'upcoming' : 'past');
 
-  const formatLocation = (location: string | undefined) => {
-    return location ? location.toUpperCase() : '';
-  };
+  if (isLoading) {
+    return <p className={styles.status}>Henter begivenheder…</p>;
+  }
 
-  const currentDate = new Date();
-
-  const handleEventClick = (event: Event) => {
-    setSelectedEvent(event);
-    setShowPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-    setSelectedEvent(null);
-  };
-
-  const handleAddToCalendar = () => {
-    if (!selectedEvent) return;
-
-    addEventToCalendar(selectedEvent);
-
-    handleClosePopup();
-  };
+  if (error) {
+    return <p className={styles.status}>Kalenderen kunne ikke hentes. Prøv at genindlæse siden.</p>;
+  }
 
   return (
     <div className={styles.calendar}>
+      <PageIntro title="Kalender">
+        <p>
+          {nextEvent
+            ? `Næste gang: ${stripClubPrefix(nextEvent.title)}, ${formatDate(nextEvent.startDate, { weekday: 'long', day: 'numeric', month: 'long' })}.`
+            : tbaEvents.length > 0
+              ? `Ingen dato i kalenderen lige nu, men ${tbaEvents.length === 1 ? 'én aften' : `${tbaEvents.length} aftener`} er på tegnebrættet.`
+              : 'Ingen dato i kalenderen lige nu.'}
+        </p>
+      </PageIntro>
+
       {events.length === 0 ? (
         <div className={styles.emptyState}>
-          <ImpactText>Ingen kommende begivenheder</ImpactText>
+          <ImpactText as="h2">Ingen kommende begivenheder</ImpactText>
           <p className={styles.emptyStateText}>Der er i øjeblikket ingen begivenheder planlagt.</p>
         </div>
       ) : (
         <>
-          {tbaEvents.length > 0 && (
-            <div className={styles.yearSection}>
-              <div className={styles.yearHeader}>
-                <ImpactText>TBA</ImpactText>
+          {nextEvent && (
+            <LedgerSection title="Næste gang">
+              <div className={styles.eventsGrid}>
+                <EventCard event={nextEvent} state="upcoming" onAddToCalendar={setSelectedEvent} />
               </div>
+            </LedgerSection>
+          )}
 
+          {tbaEvents.length > 0 && (
+            <LedgerSection title="TBA" tally="Dato følger">
               <div className={styles.eventsGrid}>
                 {tbaEvents.map((event, index) => (
-                  <Card key={index} variant="solid">
-                    <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
-                      <div className={styles.eventHeader}>
-                        <div className={styles.eventDate}>TBA</div>
-                        <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
-                      </div>
-
-                      <div className={styles.eventTitle}>{event.title}</div>
-
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: event.description,
-                        }}
-                      />
-                    </div>
-                  </Card>
+                  <EventCard key={index} event={event} state="tba" onAddToCalendar={setSelectedEvent} />
                 ))}
               </div>
-            </div>
+            </LedgerSection>
           )}
 
           {sortedYears.map((year) => (
-            <div key={year} className={styles.yearSection}>
-              <div className={styles.yearHeader}>
-                <ImpactText>{year}</ImpactText>
-              </div>
-
+            <LedgerSection key={year} title={year} tally={eventsByYear[year].length === 1 ? '1 aften' : `${eventsByYear[year].length} aftener`}>
               <div className={styles.eventsGrid}>
-                {eventsByYear[year]
-                  .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-                  .map((event, index) => {
-                    const isFutureEvent = new Date(event.startDate) > currentDate;
-                    return (
-                      <Card key={index} variant={isFutureEvent ? 'solid' : 'outlined'}>
-                        <div className={styles.eventCard} onClick={() => handleEventClick(event)}>
-                          <div className={styles.eventHeader}>
-                            <div className={styles.eventDate}>{formatDate(new Date(event.startDate))}</div>
-                            <div className={styles.eventLocation}>{formatLocation(event.location)}</div>
-                          </div>
-
-                          <div className={styles.eventTitle}>{event.title}</div>
-
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: event.description,
-                            }}
-                          />
-                        </div>
-                      </Card>
-                    );
-                  })}
+                {eventsByYear[year].map((event, index) => (
+                  <EventCard key={index} event={event} state={getState(event)} onAddToCalendar={setSelectedEvent} />
+                ))}
               </div>
-            </div>
+            </LedgerSection>
           ))}
         </>
       )}
 
-      {selectedEvent && <AddEventToCalendar event={selectedEvent} isOpen={showPopup} onClose={handleClosePopup} onConfirm={handleAddToCalendar} />}
+      {selectedEvent && <AddEventToCalendar event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
     </div>
   );
 };

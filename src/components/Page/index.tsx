@@ -16,19 +16,20 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
     <>
       <header className={styles.header}>
         <NavLink to="/" className={styles.logo}>
-          Specialklasen <PiWineFill />
+          Specialklasen <PiWineFill aria-hidden />
         </NavLink>
 
-        <nav>
+        <nav aria-label="Hovedmenu">
           <NavLink to="/cellar">Kælderen</NavLink>
           <NavLink to="/calendar">Kalender</NavLink>
           <NavLink to="/albums">Billeder</NavLink>
           <NavLink to="/articles-of-association">Vedtægter</NavLink>
 
           {isAdmin && (
-            <a href="/_" target="_blank">
+            <a href="/_" target="_blank" rel="noreferrer">
               Admin
-              <FaExternalLinkAlt size={14} />
+              <FaExternalLinkAlt size={14} aria-hidden />
+              <span className="visually-hidden">(åbner i en ny fane)</span>
             </a>
           )}
         </nav>

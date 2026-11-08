@@ -25,9 +25,13 @@
 /* Color theme */
 
 :root {
-  --color-primary: #943c1e;
+  --color-primary: #943c1e; // rust, for surfaces, borders and rules
+  --color-primary-text: #d4744f; // rust tint readable on the dark background (5.3:1)
   --color-secondary: #1c1a1b;
+  --color-background: var(--color-secondary);
   --color-text: #eee3d2;
+  --color-on-primary: var(--color-text); // text on rust surfaces (5.7:1)
+  --color-text-muted: #a89a8c; // secondary text on the dark background (6.3:1)
   --color-grey: #7a6f65;
 
   --border-radius: 0px;
@@ -35,10 +39,44 @@
   --content-width: 1600px;
 }
 
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-text);
+  outline-offset: 3px;
+}
+
+// visually hidden, still read by screen readers
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 // fade in page on load
 body {
   opacity: 0;
-  animation: fadeIn 0.5s ease-in forwards;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    opacity: 1;
+    animation: none;
+  }
+
+  .snowfall {
+    display: none;
+  }
 }
 
 @keyframes fadeIn {

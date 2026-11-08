@@ -6,8 +6,9 @@ export const useEvents = () => {
   return useQuery({
     queryKey: ['events'],
     queryFn: async () => {
-      const result = await pb.collection('calendar').getList();
-      return result.items as unknown as Event[];
+      // getFullList pages through every record; getList stops at the first 30
+      const items = await pb.collection('calendar').getFullList();
+      return items as unknown as Event[];
     },
   });
 };
