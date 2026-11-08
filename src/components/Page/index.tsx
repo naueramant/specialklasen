@@ -24,6 +24,7 @@ const Page: FunctionComponent<PageProps> = ({ children }) => {
           <NavLink to="/calendar">Kalender</NavLink>
           <NavLink to="/albums">Billeder</NavLink>
           <NavLink to="/articles-of-association">Vedtægter</NavLink>
+          <NavLink to="/board">Bestyrelsen</NavLink>
 
           {isAdmin && (
             <a href="/_" target="_blank" rel="noreferrer">
