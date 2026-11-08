@@ -13,6 +13,7 @@ import { queryClient } from './services/api/client';
 import AlbumsPage from './pages/albums';
 import AlbumDetailsPage from './pages/albums/AlbumDetails';
 import BoardPage from './pages/board';
+import DownloadsPage from './pages/downloads';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/articles-of-association" element={<ArticleOfAssociationPage />} />
             <Route path="/board" element={<BoardPage />} />
+            <Route path="/downloads" element={<DownloadsPage />} />
             <Route path="/albums" element={<AlbumsPage />} />
             <Route path="/albums/:id" element={<AlbumDetailsPage />} />
             <Route path="/admin" element={<AdminPage />} />

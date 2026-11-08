@@ -1,0 +1,99 @@
+.downloads {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr));
+  gap: 1.5rem;
+
+  > li {
+    display: flex;
+  }
+}
+
+// each file is one link: preview on top, details and the download button below
+.download {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--color-primary);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(148, 60, 30, 0.2);
+
+    .action {
+      background-color: var(--color-text);
+      color: var(--color-secondary);
+    }
+  }
+}
+
+// the sheet itself, shown as a page lying on rust
+.preview {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--color-primary);
+
+  img {
+    width: min(100%, 14rem);
+    aspect-ratio: 210 / 297;
+    object-fit: cover;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.placeholder {
+  font-size: 4rem;
+  color: var(--color-on-primary);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.title {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.description {
+  color: var(--color-text-muted);
+  text-wrap: pretty;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  margin-top: auto;
+  padding: 0 1rem;
+  border: 2px solid var(--color-text);
+  border-radius: 4px;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.format {
+  font-family: 'Mona Sans', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
